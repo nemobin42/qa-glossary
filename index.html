@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이슈 리포트 용어 사전</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/ui-demo.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">For QA &amp; Testers · UI/UX 용어 <span id="total"></span>개</span>
+    <h1>“그 팝업”의<br><mark>정확한 이름</mark>은 뭘까요?</h1>
+    <p class="lede">QA·테스터가 이슈 리포트를 쓸 때 필요한 용어를 모았어요. 모달, 바텀 시트, 토스트는 모두 “팝업”이라고 부르기 쉽지만, 개발자와 디자이너에게는 서로 다른 컴포넌트예요. 정확한 이름을 쓰면 어느 부분을 확인해야 하는지 바로 전달돼요. 카드를 누르면 용어 설명과 화면 예시를 볼 수 있어요.</p>
+  </header>
+
+  <div class="toolbar">
+    <label class="search" for="q">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="용어 검색 (예: 토스트, modal, 팝업)" autocomplete="off">
+      <kbd>/</kbd>
+    </label>
+    <div class="cats" id="cats" role="group" aria-label="분류"></div>
+    <span class="count" id="count"></span>
+  </div>
+
+  <main class="grid" id="grid"></main>
+  <footer>용어 표기는 업계에서 흔히 쓰는 이름 기준입니다. 팀·디자인 시스템마다 부르는 이름이 다를 수 있으니, 처음 쓸 때는 팀 컨벤션을 확인하세요.</footer>
+</div>
+
+<div class="overlay" id="ov" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="d-title">
+    <div class="d-stage"><div id="d-demo"></div><span class="note" id="d-note"></span></div>
+    <div class="d-body">
+      <div class="d-head">
+        <div><span class="cat" id="d-cat" style="font-family:var(--f-mono);font-size:12px;color:var(--accent)"></span>
+        <h2 id="d-title"></h2><span class="en" id="d-en" style="font-family:var(--f-mono);font-size:13px;color:var(--muted)"></span></div>
+        <button class="close" id="d-close" aria-label="닫기">✕</button>
+      </div>
+      <section><h4>설명</h4><p id="d-desc"></p></section>
+      <section><h4>헷갈리기 쉬운 용어</h4><div class="rels" id="d-rels"></div></section>
+    </div>
+  </div>
+</div>
+
+<script src="js/ui-terms.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
