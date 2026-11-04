@@ -2,6 +2,12 @@
 const HD=t=>`<div class="hd">${t}</div>`;
 const L=(n,c='')=>Array.from({length:n},(_,i)=>`<div class="ln ${i%3==2?'s':i%3==1?'m':''} ${c}"></div>`).join('');
 const PAGE=(t,inner='')=>HD(t)+`<div class="pg">${inner||L(3)+'<div class="blk"></div>'+L(4)}</div>`;
+// 장면 여러 개를 직접 넘겨 보는 데모 (넘김 버튼은 상세 화면에서 app.js가 붙임)
+const CAR=s=>`<div class="car"><div class="car-t" style="width:${s.length*100}%">${s.map(x=>`<div class="car-s">${x}</div>`).join('')}</div></div><div class="car-dots"><i class="on"></i>${'<i></i>'.repeat(s.length-1)}</div>`;
+const CUR=`<div class="cur"><svg width="14" height="20" viewBox="0 0 14 20" aria-hidden="true"><path d="M1 1v15l4-4 3 6 2.5-1-3-6h5.5z" fill="#1a1a1a" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg></div>`;
+// 커서 등은 버튼 바깥(래퍼)에 둠 — Disabled 투명도·Hover 밝기가 커서에 번지지 않게
+const BTN_ST=(c,n,k,x='')=>PAGE('결제',`${L(3)}<div class="blk"></div>${L(2)}<div class="bst-w ${c}"><div class="btn bst">결제하기</div>${x}</div><div class="bst-cap"><b>${n}</b><span>${k}</span></div>`);
+const HF_HD=HD('<span>←</span> 주문 상세<span style="margin-left:auto">⋮</span>');
 
 const UI_TERMS=[
 /* ---------- 오버레이 ---------- */
@@ -103,7 +109,7 @@ const UI_TERMS=[
  bad:'업로드가 다 찼는데 안 끝나요',
  good:'[사진 업로드] 프로그레스 바가 100%에 도달한 뒤 20초 이상 완료 상태로 전환되지 않음',
  rel:['spinner','stepper'],
- demo:PAGE('업로드',`<b>사진 업로드 중</b><div class="pb"><i></i></div>${L(2)}<b style="margin-top:20px">처리 중</b><div class="pb ind"><i></i></div>${L(2)}`)},
+ demo:PAGE('파일 업로드',`<div class="pf-cap">진행률을 알 때 (Determinate)</div><div class="pf"><div class="pf-ic">🖼️</div><div class="pf-b"><b>IMG_0412.jpg</b><div class="pb"><i class="det"></i></div><div class="pf-s"><span class="pf-n"></span><span class="pf-ok">업로드 완료 ✓</span></div></div></div><div class="pf-cap" style="margin-top:8px">진행률을 모를 때 (Indeterminate)</div><div class="pf"><div class="pf-ic">🎬</div><div class="pf-b"><b>video_01.mp4</b><div class="pb ind"><i></i></div><div class="pf-s"><span>변환 중… 남은 시간 알 수 없음</span></div></div></div>`)},
 
 {id:'empty-state',ko:'빈 상태 화면',en:'Empty State',cat:'피드백·상태',
  short:'보여줄 데이터가 없을 때 나오는 안내 화면.',
@@ -140,7 +146,7 @@ const UI_TERMS=[
  bad:'아래 메뉴가 글을 가려요',
  good:'[주문내역 목록] 목록 마지막 항목이 하단 탭 바에 가려져 끝까지 스크롤해도 보이지 않음',
  rel:['gnb','tab','fab'],
- demo:PAGE('홈')+`<div class="nav-bt"><i class="on"></i><i></i><i></i><i></i></div>`},
+ demo:HD('<span class="nav-tt"><b>홈</b><b>검색</b><b>알림</b><b>MY</b></span>')+`<div class="pg nav-pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="nav-bt">${['홈','검색','알림','MY'].map(n=>`<span><i></i>${n}</span>`).join('')}</div>`},
 
 {id:'hamburger',ko:'햄버거 메뉴',en:'Hamburger Menu',cat:'내비게이션',
  short:'가로줄 세 개(≡) 모양의 메뉴 버튼.',
@@ -158,7 +164,7 @@ const UI_TERMS=[
  bad:'탭 밑줄이 따로 놀아요',
  good:'[상품 상세 탭] "리뷰" 탭을 선택했는데 인디케이터(밑줄)가 "상품정보" 탭 아래에 머무름',
  rel:['segmented','bottom-nav','accordion'],
- demo:HD('상품')+`<div class="tb"><span>정보</span><span>리뷰</span><span>문의</span><i class="ind"></i></div><div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div>`},
+ demo:HD('상품')+`<div class="tb"><span>상품정보</span><span>리뷰</span><span>문의</span><i class="ind"></i></div><div class="tb-pg"><div class="tb-p"><div class="blk big"></div>${L(4)}</div><div class="tb-p">${['★★★★★','★★★★☆','★★★☆☆'].map(r=>`<div class="tb-rv"><span class="tb-st">${r}</span>${L(2)}</div>`).join('')}</div><div class="tb-p">${'<div class="tb-qa"><b>Q</b><div class="ln m"></div></div><div class="tb-qa a"><b>A</b><div class="ln"></div></div>'.repeat(3)}</div></div>`},
 
 {id:'breadcrumb',ko:'브레드크럼',en:'Breadcrumb',cat:'내비게이션',
  short:'홈 > 카테고리 > 현재 페이지 같은 위치 경로.',
@@ -185,7 +191,7 @@ const UI_TERMS=[
  bad:'밑으로 내리면 더 안 나와요',
  good:'[피드 무한 스크롤] 20번째 항목까지 스크롤 후 다음 페이지 로딩 스피너만 노출되고 데이터가 추가되지 않음',
  rel:['pagination','spinner','pull-to-refresh'],
- demo:HD('피드')+`<div class="is">${L(2)}<div class="blk"></div>${L(2)}<div class="blk"></div>${L(2)}<div class="blk"></div>${L(2)}<div class="spin"></div></div>`},
+ demo:HD('피드')+`<div class="is-v"><div class="is">${`<div class="is-p"><div class="blk"></div>${L(2)}</div>`.repeat(3)}<div class="is-ld"><div class="spin"></div>다음 글 불러오는 중…</div><div class="is-new"><div class="is-tag">↓ 새로 불러온 글</div>${`<div class="is-p"><div class="blk"></div>${L(2)}</div>`.repeat(2)}</div></div></div>`},
 
 {id:'stepper',ko:'스테퍼 / 단계 표시',en:'Stepper / Progress Steps',cat:'내비게이션',
  short:'1단계 → 2단계 → 3단계 진행 상황 표시.',
@@ -213,6 +219,17 @@ const UI_TERMS=[
  good:'[검색 결과 필터 바] 스크롤 시 스티키 필터 바가 첫 번째 상품 카드의 상단 40px를 가림',
  rel:['gnb','tab'],
  demo:`<div class="stk-c"><div class="blk" style="height:50px"></div><div style="height:30px"></div>${L(12)}</div><div class="stk-t tb"><span>전체</span><span>할인</span><span>무료배송</span><i class="ind" style="animation:none"></i></div><div class="stk-h">${HD('검색 결과')}</div>`},
+
+{id:'header-footer',ko:'헤더 / 푸터',en:'Header / Footer',cat:'콘텐츠·레이아웃',
+ short:'화면 맨 위 제목 영역(헤더)과 맨 아래 정보 영역(푸터).',
+ desc:'헤더는 화면 맨 위에서 뒤로가기(←), 화면 제목, 검색·더보기 같은 버튼을 담는 영역입니다. 앱에서는 앱 바·내비게이션 바·타이틀 바라고도 부릅니다. 푸터는 페이지 맨 아래에서 회사 정보, 이용약관, 고객센터 링크 등을 보여주는 영역으로 주로 웹에서 씁니다. 화면 하단에 고정된 버튼 영역(예: "구매하기" 바)은 하단 고정 버튼(CTA 바)이라고 따로 부르기도 합니다.',
+ bugs:['헤더 제목이 이전 화면 제목으로 남아 있음','헤더의 뒤로가기(←) 버튼이 동작하지 않거나 엉뚱한 화면으로 이동','긴 제목이 말줄임 없이 헤더 버튼과 겹침','푸터 약관·고객센터 링크가 잘못된 페이지로 연결됨','내용이 짧은 페이지에서 푸터가 화면 중간에 떠 있음'],
+ bad:'위에 제목이 이상하게 나와요',
+ good:'[주문 상세 헤더] 주문내역 → 주문 상세 진입 시 헤더 제목이 "주문 상세"가 아닌 "주문내역"으로 표시됨',
+ rel:['gnb','sticky','bottom-nav'],
+ demo:CAR([
+  `<div class="car-hl top">${HF_HD}</div><div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><span class="lbl" style="left:10px;top:38px">① 헤더 Header</span>`,
+  `${HF_HD}<div class="pg">${L(3)}<div class="blk"></div>${L(2)}</div><span class="lbl" style="left:10px;bottom:84px">② 푸터 Footer</span><div class="hf-ft car-hl bot"><div>이용약관 · 개인정보처리방침</div><div>고객센터 1588-0000</div><div>© 예시컴퍼니</div></div>`])},
 
 /* ---------- 입력·컨트롤 ---------- */
 {id:'dropdown',ko:'드롭다운 / 셀렉트 박스',en:'Dropdown / Select',cat:'입력·컨트롤',
@@ -258,7 +275,7 @@ const UI_TERMS=[
  bad:'일/주/월 버튼이 안 맞아요',
  good:'[통계 기간 세그먼트 컨트롤] "월" 선택 시 차트가 주간 데이터로 표시됨',
  rel:['tab','radio','toggle'],
- demo:PAGE('통계',`<div class="seg"><i class="kn"></i><span>일</span><span>주</span><span>월</span></div><div class="blk" style="height:90px"></div>${L(3)}`)},
+ demo:PAGE('통계',`<div class="seg"><i class="kn"></i><span>일</span><span>주</span><span>월</span></div><div class="seg-ch">${[[30,55,70],[60,40,85],[45,75,60],[80,50,95],[35,90,75],[55,65,50],[70,45,80]].map(([a,b,c])=>`<i style="--a:${a}%;--b:${b}%;--c:${c}%"></i>`).join('')}</div>${L(3)}`)},
 
 {id:'chip',ko:'칩 / 태그',en:'Chip / Tag',cat:'입력·컨트롤',
  short:'필터나 키워드를 나타내는 작은 알약 모양 버튼.',
@@ -277,6 +294,15 @@ const UI_TERMS=[
  good:'[가격 레인지 슬라이더] 최소 손잡이를 최대 손잡이보다 오른쪽으로 드래그할 수 있음',
  rel:['carousel','progress'],
  demo:PAGE('필터',`<b>가격</b><div class="sl"><i class="fill"></i><i class="th"></i></div><div style="display:flex;justify-content:space-between;font-size:10px"><span>0원</span><span>100,000원</span></div>${L(3)}`)},
+
+{id:'text-field',ko:'텍스트 필드 / 입력창',en:'Text Field / Input',cat:'입력·컨트롤',
+ short:'글자를 직접 입력하는 칸. 레이블·커서·지우기 버튼 등으로 구성.',
+ desc:'이름, 이메일, 검색어처럼 글자를 직접 입력하는 칸입니다. 위의 이름표는 레이블, 깜빡이는 세로 막대는 커서(캐럿), 입력값을 한 번에 지우는 ✕는 지우기(clear) 버튼, "5/20" 같은 숫자는 글자 수 카운터라고 부릅니다. 입력창을 눌러 커서가 들어간 상태를 "포커스"라고 하며, 기본·포커스·입력 완료·에러·비활성 상태별로 모양이 달라집니다.',
+ bugs:['입력창을 눌러도 포커스가 잡히지 않거나 키보드가 뜨지 않음','최대 글자 수를 넘겨도 입력되거나, 카운터 숫자가 실제 글자 수와 다름','붙여넣기(Ctrl+V)가 안 되거나, 앞뒤 공백·이모지가 그대로 저장됨','지우기(✕) 버튼을 눌러도 값이 지워지지 않음','숫자만 입력해야 하는 칸에 문자가 입력됨'],
+ bad:'입력칸에 글씨가 너무 많이 써져요',
+ good:'[닉네임 텍스트 필드] 최대 10자 제한인데 붙여넣기로 15자 입력 가능, 카운터는 "10/10"으로 표시됨',
+ rel:['placeholder','validation','button-state'],
+ demo:PAGE('프로필 수정',`<b>닉네임</b><div class="in tf"><span class="typed tf-t">테스터김</span><span class="tf-x">✕</span></div><div class="tf-cnt"><span class="tf-n"><span><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i></span></span>/10</div><b>소개</b><div class="in"><span style="color:#8b95a7">한 줄 소개</span></div><div class="btn">저장</div>`)},
 
 {id:'placeholder',ko:'플레이스홀더',en:'Placeholder',cat:'입력·컨트롤',
  short:'입력창이 비어 있을 때 보이는 회색 안내 글자.',
@@ -303,7 +329,12 @@ const UI_TERMS=[
  bad:'버튼 색이 이상해요',
  good:'[결제하기 버튼] 필수 약관 미동의로 Disabled 상태인데 탭하면 결제 페이지로 이동함',
  rel:['validation','tooltip'],
- demo:PAGE('결제',`${L(3)}<div class="blk"></div>${L(2)}<div style="margin-top:24px;display:grid;gap:6px"><div class="btn st-btn">결제하기</div><div class="st-lbl"><span>Default</span><span>Hover</span><span>Pressed</span><span>Focus</span><span>Disabled</span></div></div>`)},
+ demo:CAR([
+  BTN_ST('def','Default','아무 동작도 없을 때의 기본 모습',CUR),
+  BTN_ST('hov','Hover','마우스를 올리면 밝아짐 (PC)',CUR),
+  BTN_ST('prs','Pressed','누르는 동안 작고 어둡게',CUR),
+  BTN_ST('foc','Focus','Tab 키로 선택하면 테두리 표시','<span class="bst-key">Tab ⇥</span>'),
+  BTN_ST('dis','Disabled','눌러도 아무 반응 없음',CUR+'<span class="bst-no">⊘</span>')])},
 
 /* ---------- 콘텐츠·레이아웃 ---------- */
 {id:'accordion',ko:'아코디언',en:'Accordion / Collapse',cat:'콘텐츠·레이아웃',
@@ -323,6 +354,15 @@ const UI_TERMS=[
  good:'[메인 배너 캐러셀] 3번째 배너 노출 중인데 점 인디케이터는 2번째가 활성화되어 있음',
  rel:['slider','pagination'],
  demo:PAGE('홈',`<div class="cr"><div class="track"><div style="background:#4f6edb">배너 1</div><div style="background:#d06a4f">배너 2</div><div style="background:#3f9a73">배너 3</div></div></div><div class="dots"><i></i><i></i><i></i></div>${L(4)}`)},
+
+{id:'card',ko:'카드',en:'Card',cat:'콘텐츠·레이아웃',
+ short:'썸네일·제목·정보를 한 덩어리 상자로 묶은 요소.',
+ desc:'이미지, 제목, 가격, 버튼 같은 정보를 하나의 둥근 상자에 묶어 보여주는 요소입니다. 상품 목록, 피드, 대시보드에서 반복해서 씁니다. 카드 전체가 눌리는지, 카드 안의 버튼(찜·더보기)만 따로 눌리는지가 자주 테스트 포인트가 됩니다. 카드가 줄지어 있는 목록은 카드 리스트, 바둑판처럼 놓인 것은 카드 그리드라고 부릅니다.',
+ bugs:['카드 안 찜(♡) 버튼을 눌렀는데 카드 전체가 눌려 상세로 이동함','카드마다 높이가 달라 그리드 줄이 어긋남','이미지가 없는 상품에서 카드 레이아웃이 무너짐','카드 눌림 피드백(배경색·그림자 변화)이 없음'],
+ bad:'상품 네모 칸이 이상해요',
+ good:'[상품 목록 카드] 카드 우측 상단 찜(♡) 아이콘 탭 시 찜 등록 대신 상품 상세 페이지로 이동함',
+ rel:['truncation','badge','carousel'],
+ demo:PAGE('상품 목록',`<div class="cdx"><div class="th"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>12,900원</b></div><span class="hrt">♡</span></div><div class="cdx" style="animation:none"><div class="th" style="background:#d06a4f"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>8,500원</b></div><span class="hrt">♡</span></div><div class="cdx" style="animation:none"><div class="th" style="background:#3f9a73"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>21,000원</b></div><span class="hrt">♡</span></div>`)},
 
 {id:'truncation',ko:'말줄임',en:'Truncation / Ellipsis',cat:'콘텐츠·레이아웃',
  short:'글이 길 때 뒤를 "…"로 자르는 처리.',
@@ -350,5 +390,33 @@ const UI_TERMS=[
  good:'[메일 목록 스와이프 액션] 1번 항목을 왼쪽으로 스와이프한 상태에서 2번 항목을 스와이프하면 1번의 삭제 버튼이 열린 채 유지됨',
  rel:['snackbar'],
  demo:PAGE('메일',`<div class="sw"><span class="del">삭제</span><div class="row"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row" style="animation:none"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row" style="animation:none"><div class="ln m"></div><div class="ln s"></div></div></div>`)},
+
+/* ---------- 환경·플랫폼 ---------- */
+{id:'dark-mode',ko:'다크 모드',en:'Dark Mode / Dark Theme',cat:'환경·플랫폼',
+ short:'배경을 어둡게, 글자를 밝게 바꾼 화면 테마.',
+ desc:'배경은 어둡게, 글자와 아이콘은 밝게 뒤집어 보여주는 화면 테마입니다. 기기 설정을 따라가는 "시스템 설정 따름"과 앱 안에서 직접 고르는 방식이 있습니다. 색을 하드코딩한 요소만 테마가 안 바뀌어 검은 배경에 검은 글씨가 되는 경우가 대표적인 버그라, 라이트·다크 두 모드에서 모두 확인해야 합니다.',
+ bugs:['다크 모드에서 특정 텍스트·아이콘이 배경과 같은 색이라 보이지 않음','투명 배경이 아닌 흰 배경 이미지(로고 등)가 어두운 화면에서 흰 상자로 튐','기기 설정을 바꿔도 앱 테마가 즉시 바뀌지 않음','웹뷰 화면만 라이트 모드로 남음'],
+ bad:'까만 화면에서 글씨가 안 보여요',
+ good:'[다크 모드 > 주문 상세] "배송 요청사항" 텍스트가 #000으로 고정되어 다크 배경에서 보이지 않음. 기대 결과: 테마 텍스트 색 적용',
+ rel:['responsive','foreground-background'],
+ demo:`<div class="dk"><div class="dk-hd">설정</div><div class="pg"><div class="tg-row"><span>다크 모드</span><span class="dk-tg"></span></div><div class="dk-ln m"></div><div class="dk-ln"></div><div class="dk-blk"></div><div class="dk-ln s"></div><div class="dk-ln m"></div><div class="dk-blk"></div></div></div>`},
+
+{id:'foreground-background',ko:'포그라운드 / 백그라운드',en:'Foreground / Background (App Lifecycle)',cat:'환경·플랫폼',
+ short:'앱이 화면에 떠 있는 상태와 뒤로 숨어 있는 상태.',
+ desc:'앱이 화면에 보이며 사용 중인 상태를 포그라운드, 홈 버튼을 누르거나 다른 앱으로 전환해 뒤에서 대기하는 상태를 백그라운드라고 합니다. 백그라운드에서 다시 앱으로 돌아오는 것을 "포그라운드 복귀(resume)"라고 하며, 이때 화면이 초기화되거나 데이터가 갱신되지 않는 버그가 자주 나옵니다. 오래 백그라운드에 있으면 OS가 앱을 종료할 수 있어 "백그라운드 장시간 방치 후 복귀"도 별도 케이스로 봅니다.',
+ bugs:['백그라운드 갔다 오면 작성 중이던 내용이 사라짐','복귀 후 로그인 세션이 만료되었는데 안내 없이 빈 화면만 보임','백그라운드에서 영상·음악이 멈추지 않거나, 멈춰야 하는데 계속 재생됨','결제·인증 앱 전환 후 돌아오면 이전 화면이 아닌 홈으로 이동함'],
+ bad:'앱 나갔다 들어오면 다 날아가요',
+ good:'[게시글 작성] 본문 입력 중 홈 버튼으로 백그라운드 전환 후 1분 뒤 포그라운드 복귀 시 입력 내용이 초기화됨',
+ rel:['pull-to-refresh','dark-mode'],
+ demo:`<div class="fg-home"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fg-app">${PAGE('글쓰기',`<div class="in" style="min-height:60px">오늘 배송 받은 상품은…</div>${L(3)}<div class="btn">등록</div>`)}</div><span class="lbl fg-l1" style="left:8px;bottom:8px">foreground</span><span class="lbl fg-l2" style="left:8px;bottom:8px">background</span>`},
+
+{id:'responsive',ko:'반응형 / 브레이크포인트',en:'Responsive Layout / Breakpoint',cat:'환경·플랫폼',
+ short:'화면 폭에 맞춰 레이아웃이 바뀌는 것, 그 기준 폭.',
+ desc:'반응형은 화면(창) 폭에 따라 레이아웃이 자동으로 바뀌는 설계입니다. 레이아웃이 바뀌는 기준 폭을 브레이크포인트라고 합니다(예: 768px 미만은 모바일 1열, 이상은 PC 3열). 브레이크포인트 바로 앞뒤 폭, 태블릿, 가로 모드, 브라우저 창 줄이기가 주요 테스트 구간이라 이슈를 쓸 때 화면 폭(px)이나 기기명을 함께 적어야 재현됩니다.',
+ bugs:['특정 폭 구간(예: 768~1024px)에서 요소가 겹치거나 가로 스크롤이 생김','모바일 폭에서 PC용 메뉴가 그대로 나와 넘침','기기를 가로로 돌리면 레이아웃이 깨지거나 갱신되지 않음','이미지가 폭에 맞춰 줄지 않고 화면 밖으로 넘침'],
+ bad:'화면 줄이면 깨져요',
+ good:'[메인 > 기획전 영역] 브라우저 폭 800px(태블릿 구간)에서 카드 3열이 유지되어 카드가 겹치고 가로 스크롤 발생. 기대 결과: 768~1023px 2열',
+ rel:['card','dark-mode','truncation'],
+ demo:HD('창 폭 변화')+`<div class="pg"><div class="rsp"><div class="rsp-bar"><i></i><i></i><i></i></div><div class="rsp-grid"><div></div><div></div><div></div><div></div><div></div><div></div></div></div><div class="rsp-w"><span>PC 3열</span><span>모바일 1~2열</span></div></div>`},
 ];
-const UI_CATS=['전체','오버레이','내비게이션','입력·컨트롤','피드백·상태','콘텐츠·레이아웃'];
+const UI_CATS=['전체','오버레이','내비게이션','입력·컨트롤','피드백·상태','콘텐츠·레이아웃','환경·플랫폼'];
