@@ -1,7 +1,7 @@
-/* Layout: 검색·필터 바 아래 카드 그리드, 카드 → 상세 팝업(애니메이션 데모 + 설명 + 보고 예시) */
+/* Layout: GNB(사전 전환) → 검색·필터 바 → 카드 그리드, 카드 → 상세 팝업(화면 예시 + 설명) */
 :root{
   --bg:#eef1f5; --surface:#ffffff; --ink:#18212f; --muted:#5b6678; --line:#d3d9e2;
-  --accent:#2f5bea; --accent-soft:#e3e9fd; --mark:#ffe14d; --bad:#d6453d; --good:#1f8a5b; --on-accent:#fff;
+  --accent:#2f5bea; --accent-soft:#e3e9fd; --mark:#ffe14d; --bad:#d6453d; --good:#1f8a5b; --warn:#b45309; --on-accent:#fff;
   --stage:#dfe4ec; --phone:#ffffff; --phone-ink:#2a3445; --phone-line:#c9d0db;
   --f-display:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
@@ -9,11 +9,11 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121721; --surface:#1b2230; --ink:#e7ecf3; --muted:#9aa5b8; --line:#2c3546;
-  --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --on-accent:#0d1424;
+  --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --warn:#f0a35e; --on-accent:#0d1424;
   --stage:#0d121a; --phone:#222b3a; --phone-ink:#d7deea; --phone-line:#3a4559; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121721; --surface:#1b2230; --ink:#e7ecf3; --muted:#9aa5b8; --line:#2c3546;
-  --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --on-accent:#0d1424;
+  --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --warn:#f0a35e; --on-accent:#0d1424;
   --stage:#0d121a; --phone:#222b3a; --phone-ink:#d7deea; --phone-line:#3a4559; color-scheme:dark}
 *{box-sizing:border-box}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -21,7 +21,15 @@ body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
-.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 64px}
+/* GNB(.site-nav — 데모용 .gnb와 겹치지 않게 다른 이름): 사전 종류 전환 (UI/UX 용어 · HTTP 상태 코드) */
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:32px}
+.site-nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+.gnb-tabs{display:flex;gap:3px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.gnb-tabs a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:7px}
+.gnb-tabs a:hover{color:var(--ink)}
+.gnb-tabs a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.site-nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 header.hero{display:grid;gap:14px;margin-bottom:28px}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
 h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5.2vw,48px);line-height:1.25;letter-spacing:-.02em;margin:0;text-wrap:balance}
@@ -56,9 +64,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .d-body{padding:24px 26px 26px;display:grid;gap:16px;align-content:start;min-width:0}
 .d-head{display:flex;justify-content:space-between;gap:12px;align-items:start}
 .d-head h2{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:-.02em;margin:0;line-height:1.1}
+.d-head .cat{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+.d-head .en{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 .close{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:34px;height:34px;font-size:18px;cursor:pointer;flex:none}
 .d-body h4{margin:0 0 6px;font-size:12px;font-family:var(--f-mono);letter-spacing:.06em;color:var(--muted);text-transform:uppercase;font-weight:500}
 .d-body p{margin:0}
+.d-body ul{margin:0;padding-left:18px;display:grid;gap:3px}
 .rels{display:flex;gap:6px;flex-wrap:wrap}
 .rel{font:inherit;font-size:13px;border:1px dashed var(--accent);color:var(--accent);background:transparent;border-radius:6px;padding:3px 10px;cursor:pointer}
 footer{margin-top:40px;color:var(--muted);font-size:13px}

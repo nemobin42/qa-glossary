@@ -1,0 +1,20 @@
+/* HTTP 상태 코드: 카드 썸네일(큰 숫자) + 상세의 Network 탭 예시 */
+.s2{--c:var(--good)} .s3{--c:var(--accent)} .s4{--c:var(--warn)} .s5{--c:var(--bad)}
+
+/* 카드 썸네일 */
+.sc-mini{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 9%,var(--stage))}
+.sc-mini b{font-family:var(--f-mono);font-size:56px;font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--c)}
+
+/* 개발자 도구 Network 탭 */
+.net{width:300px;max-width:100%;background:var(--phone);color:var(--phone-ink);border:1px solid var(--phone-line);border-radius:10px;overflow:hidden;font-family:var(--f-mono);font-size:11px;line-height:1.4;box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.net-tabs{display:flex;gap:14px;padding:0 10px;border-bottom:1px solid var(--phone-line);color:var(--muted)}
+.net-tabs span{padding:7px 0 6px}
+.net-tabs .on{color:var(--accent);box-shadow:inset 0 -2px var(--accent)}
+.net-row{display:grid;grid-template-columns:minmax(0,1fr) 52px 42px;gap:8px;padding:5px 10px;border-bottom:1px solid var(--phone-line)}
+.net-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.net-h{font-size:10px;color:var(--muted)}
+.net-row.hit{background:color-mix(in srgb,var(--c) 14%,transparent);font-weight:700}
+.net-row.hit span:last-child{color:var(--c)}
+.net-res{padding:8px 10px 10px;display:grid;gap:4px}
+.net-res b{font-size:10px;font-weight:500;color:var(--muted)}
+.net-res code{font:inherit;white-space:pre-wrap;word-break:break-all}
