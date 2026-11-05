@@ -186,4 +186,16 @@ const STATUS_CODES=[
  alias:'타임아웃 시간초과 느림 오래걸림 timeout',
  rel:['http-408','http-502'],
  net:{m:'GET',p:'/api/stats?range=1y',r:'(30초 동안 응답 없음)'}},
+
+/* ---------- 이스터 에그: 목록·개수에는 안 나오고, egg에 적힌 말로 검색하거나 #http-418로 들어와야 보임 ---------- */
+{id:'http-418',code:418,ko:'나는 찻주전자',en:"I'm a teapot",cat:'4xx 요청 오류',
+ egg:['418','teapot',"i'm a teapot",'im a teapot','찻주전자','주전자'],
+ art:`<span class="pot"><svg viewBox="0 0 64 44" aria-hidden="true"><g fill="currentColor"><circle cx="28" cy="7" r="2.6"/><ellipse cx="28" cy="12" rx="10" ry="3"/><path d="M11 17h34c1.5 11-3.5 22-17 22S9.5 28 11 17z"/><path d="M43 23l13-9-1.5 7-9 11z"/></g><path d="M13 21c-9-1-10 13 1 12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg><i></i><i></i><i></i></span>`,
+ short:'찻주전자에게 커피를 끓여 달라고 하면 돌아오는 응답.',
+ desc:'1998년 만우절에 나온 농담 표준(RFC 2324, 커피 포트 제어 프로토콜 HTCPCP)에 정의된 코드입니다. 찻주전자에게 커피를 끓여 달라고(BREW) 하면 "저는 찻주전자라서 못 해요"라고 거절합니다. 실제 HTTP 표준(RFC 9110)에서는 이 번호를 다른 용도로 쓰지 않도록 비워 두었습니다.',
+ when:['찻주전자에게 커피를 주문했을 때','개발자가 장난으로 숨겨 둔 주소에 들어갔을 때'],
+ tip:'실서비스에서 418이 보인다면 농담이 아닐 수도 있어요. 일부 서비스는 자동화된 요청(봇)을 거절할 때 418을 쓰기도 하니, 어떤 요청에서 나왔는지 적어주세요.',
+ alias:'찻주전자 주전자 커피 teapot 이스터에그',
+ rel:['http-405','http-400'],
+ net:{m:'BREW',p:'/pot-0/coffee',r:"I'm a teapot. 커피는 못 끓여요."}},
 ];

@@ -18,3 +18,18 @@
 .net-res{padding:8px 10px 10px;display:grid;gap:4px}
 .net-res b{font-size:10px;font-weight:500;color:var(--muted)}
 .net-res code{font:inherit;white-space:pre-wrap;word-break:break-all}
+
+/* 이스터 에그 418: 찻주전자 그림 + 피어오르는 김 */
+.sc-mini{grid-auto-flow:column;gap:12px;place-content:center}
+.pot{position:relative;display:block;width:64px;height:44px;color:var(--c)}
+.pot svg{display:block;width:100%;height:100%}
+.pot i{position:absolute;bottom:100%;left:24px;width:5px;height:12px;border-radius:50%;background:var(--muted);opacity:0;animation:steam 2.4s infinite ease-out}
+.pot i:nth-of-type(2){left:30px;animation-delay:-.8s}
+.pot i:nth-of-type(3){left:36px;animation-delay:-1.6s}
+@keyframes steam{0%{transform:translateY(6px) scale(.6);opacity:0}30%{opacity:.45}100%{transform:translateY(-18px) scale(1.3);opacity:0}}
+.sc-art{display:grid;justify-items:center;margin:14px 0 18px}
+.sc-art .pot{width:96px;height:66px}
+.sc-art .pot i{left:36px;width:7px;height:16px}
+.sc-art .pot i:nth-of-type(2){left:45px}
+.sc-art .pot i:nth-of-type(3){left:54px}
+@media (prefers-reduced-motion:reduce){.pot i{animation:none}}

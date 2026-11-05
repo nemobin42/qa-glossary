@@ -31,7 +31,7 @@ const DICTS={
     foot:'상태 코드의 의미는 HTTP 표준(RFC 9110) 기준입니다. 서비스마다 실제로 쓰는 코드가 다를 수 있으니 팀의 API 문서도 함께 확인하세요.',
     ph:'코드·이름 검색 (예: 404, 권한, timeout)',empty:'숫자나 영문 이름으로 검색해 보세요.',relH:'헷갈리기 쉬운 코드',
     text:t=>[String(t.code),t.ko,t.en,t.short,t.alias||''],
-    mini:t=>`<div class="sc-mini ${sc(t)}"><b>${t.code}</b></div>`,
+    mini:t=>`<div class="sc-mini ${sc(t)}">${t.art||''}<b>${t.code}</b></div>`,
     name:t=>t.ko,sub:t=>`${t.code} ${t.en}`,dTitle:t=>`${t.code} ${t.ko}`,dEn:t=>t.en},
 };
 // id → 항목·소속 사전 (UI 용어 id와 'http-404' 같은 코드 id는 겹치지 않음)
@@ -45,7 +45,7 @@ function setSec(s){
   const first=sec==null;sec=s;cat='전체';$('#q').value='';
   const d=D();
   document.title=d.title;
-  $('#eyebrow').innerHTML=d.eyebrow(d.items.length);$('#h1').innerHTML=d.h1;$('#lede').textContent=d.lede;$('#foot').textContent=d.foot;
+  $('#eyebrow').innerHTML=d.eyebrow(d.items.filter(t=>!t.egg).length);$('#h1').innerHTML=d.h1;$('#lede').textContent=d.lede;$('#foot').textContent=d.foot;
   $('#q').placeholder=d.ph;
   document.querySelectorAll('.gnb-tabs a').forEach(a=>{if(a.dataset.s===s)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
   $('#cats').innerHTML=d.cats.map(c=>`<button type="button" data-c="${c}" aria-pressed="${c===cat}">${c}</button>`).join('');
@@ -84,7 +84,8 @@ function setupCar(){
 
 function render(){
   const d=D(),q=$('#q').value.trim().toLowerCase();
-  const list=d.items.filter(t=>(cat==='전체'||t.cat===cat)&&(!q||d.text(t).join(' ').toLowerCase().includes(q)));
+  // 이스터 에그(egg)는 정해진 검색어와 정확히 같을 때만 보임
+  const list=d.items.filter(t=>t.egg?t.egg.includes(q):(cat==='전체'||t.cat===cat)&&(!q||d.text(t).join(' ').toLowerCase().includes(q)));
   $('#count').textContent=`${list.length}개 표시 중`;
   $('#grid').innerHTML=list.length?list.map(t=>`<button class="card" type="button" data-id="${t.id}">
     <div class="mini" aria-hidden="true">${d.mini(t)}</div>
@@ -97,8 +98,8 @@ let lastFocus=null;
 function openD(id){
   const t=byId[id].t,d=D(),isUi=sec==='ui';
   if($('#ov').hidden)lastFocus=document.activeElement;
-  $('#d-demo').innerHTML=isUi?phone(t):net(t);setupCar();
-  $('#d-note').textContent=!isUi?'개발자 도구(F12) → Network 탭 예시':STILL[t.id]!=null?'화면 예시':carGo?'‹ › 버튼이나 ← → 키로 넘겨 보기':'▶ 동작 예시 (반복 재생)';
+  $('#d-demo').innerHTML=isUi?phone(t):(t.art?`<div class="sc-art ${sc(t)}">${t.art}</div>`:'')+net(t);setupCar();
+  $('#d-note').textContent=t.egg?'🎉 숨겨진 코드를 찾았어요!':!isUi?'개발자 도구(F12) → Network 탭 예시':STILL[t.id]!=null?'화면 예시':carGo?'‹ › 버튼이나 ← → 키로 넘겨 보기':'▶ 동작 예시 (반복 재생)';
   $('#d-cat').textContent=t.cat;$('#d-title').textContent=d.dTitle(t);$('#d-en').textContent=d.dEn(t);
   $('#d-desc').textContent=t.desc;
   // '이럴 때 보여요'·'보고할 때 팁'은 데이터에 있을 때만 표시 (현재 HTTP 상태 코드만)
