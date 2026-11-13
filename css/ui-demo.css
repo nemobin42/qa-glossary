@@ -2,7 +2,6 @@
 /* ===== 데모용 미니 휴대폰 ===== */
 .ph{width:180px;height:300px;background:var(--phone);border:2px solid var(--phone-line);border-radius:22px;position:relative;overflow:hidden;color:var(--phone-ink);font-family:var(--f-body);font-size:11px;line-height:1.3;flex:none}
 .card .mini .ph{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.46);transform-origin:center}
-.overlay[hidden]{display:none}
 .ph .hd{height:30px;border-bottom:1px solid var(--phone-line);display:flex;align-items:center;gap:6px;padding:0 10px;font-weight:700;font-size:11px}
 .ph .pg{padding:10px;display:grid;gap:7px}
 .ln{height:7px;border-radius:4px;background:var(--phone-line)}
@@ -47,7 +46,9 @@
 .bs .grab{width:34px;height:4px;border-radius:2px;background:var(--phone-line);justify-self:center}
 @keyframes bs{0%,15%{transform:translateY(160px)}30%,75%{transform:translateY(0)}90%,100%{transform:translateY(160px)}}
 /* drawer */
-.dr{position:absolute;left:0;top:0;bottom:0;width:120px;background:var(--phone);border-right:1px solid var(--phone-line);padding:12px 10px;display:grid;gap:10px;align-content:start;animation:dr 3.4s infinite}
+/* 드로어 패널 (드로어·햄버거 데모 공통) */
+.dr,.hb-dr{position:absolute;left:0;top:0;bottom:0;width:120px;background:var(--phone);border-right:1px solid var(--phone-line);padding:12px 10px;display:grid;gap:10px;align-content:start}
+.dr{animation:dr 3.4s infinite}
 @keyframes dr{0%,15%{transform:translateX(-125px)}30%,75%{transform:translateX(0)}90%,100%{transform:translateX(-125px)}}
 /* dropdown */
 .dd{border:1px solid var(--phone-line);border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between}
@@ -64,7 +65,7 @@
 @keyframes acArr{0%,20%{transform:rotate(0)}35%,75%{transform:rotate(180deg)}90%,100%{transform:rotate(0)}}
 /* tab */
 .tb{display:flex;border-bottom:1px solid var(--phone-line);position:relative}
-.tb span{flex:1;text-align:center;padding:6px 0;font-weight:700;color:#8b95a7;animation:tbL 6s infinite}
+.tb span{flex:1;text-align:center;padding:6px 0;font-weight:700;color:var(--phone-sub);animation:tbL 6s infinite}
 .tb .ind{position:absolute;bottom:-1px;left:0;width:33.3%;height:2px;background:var(--accent);animation:tbi 6s infinite}
 /* 탭마다 2초씩: 밑줄이 옮겨 가고, 아래 내용이 전혀 다른 화면으로 바뀜 */
 .tb-pg{position:absolute;left:0;right:0;top:57px;bottom:0;overflow:hidden}
@@ -81,7 +82,7 @@
 .tb-qa.a b{background:var(--phone-line);color:var(--muted)}
 .tb-qa .ln{flex:1}
 @keyframes tbi{0%,30%{transform:translateX(0)}34%,63%{transform:translateX(100%)}67%,96%{transform:translateX(200%)}100%{transform:translateX(0)}}
-@keyframes tbL{0%,32%{color:var(--accent)}35%,100%{color:#8b95a7}}
+@keyframes tbL{0%,32%{color:var(--accent)}35%,100%{color:var(--phone-sub)}}
 @keyframes tbP{0%{opacity:0;transform:translateX(14px)}5%,30%{opacity:1;transform:none}34%,100%{opacity:0;transform:none}}
 /* carousel */
 .cr{overflow:hidden;border-radius:8px}
@@ -106,7 +107,7 @@
 /* 바닥까지 스크롤 → 로딩 표시 → 새 글이 아래에 붙음 → 이어서 스크롤 (7초 반복) */
 .is{position:absolute;left:10px;right:10px;top:9px;display:grid;gap:7px;animation:is 7s infinite ease-in-out}
 .is-p{display:grid;gap:7px}
-.is-ld{display:flex;align-items:center;justify-content:center;gap:6px;height:26px;overflow:hidden;font-size:9px;color:#8b95a7;animation:isLd 7s infinite}
+.is-ld{display:flex;align-items:center;justify-content:center;gap:6px;height:26px;overflow:hidden;font-size:9px;color:var(--phone-sub);animation:isLd 7s infinite}
 .is-ld .spin{width:14px;height:14px;border-width:2px}
 .is-new{display:grid;gap:7px;max-height:0;opacity:0;overflow:hidden;border-radius:8px;animation:isNew 7s infinite}
 .is-tag{font-size:9px;font-weight:700;color:var(--accent);padding:6px 6px 0}
@@ -130,7 +131,7 @@
 /* hamburger */
 .hb{width:18px;display:grid;gap:3px}
 .hb-static i{animation:none!important}
-.hb-dr{position:absolute;left:0;top:31px;bottom:0;width:120px;background:var(--phone);border-right:1px solid var(--phone-line);padding:12px 10px;display:grid;gap:10px;align-content:start;box-shadow:4px 0 12px rgba(0,0,0,.15);animation:hbDr 3s infinite}
+.hb-dr{top:31px;box-shadow:4px 0 12px rgba(0,0,0,.15);animation:hbDr 3s infinite}
 @keyframes hbDr{0%,25%,90%,100%{transform:translateX(-130px)}40%,75%{transform:none}}
 .hb i{height:2px;background:var(--phone-ink);border-radius:2px;display:block}
 .hb i:nth-child(1){animation:hb1 3s infinite}.hb i:nth-child(2){animation:hb2 3s infinite}.hb i:nth-child(3){animation:hb3 3s infinite}
@@ -203,12 +204,12 @@
 @keyframes pbi{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
 /* 업로드 파일 카드: 막대와 % 숫자가 함께 오르고, 100%면 완료로 바뀜 */
 @property --p{syntax:'<integer>';inherits:false;initial-value:0}
-.pf-cap{font-family:var(--f-mono);font-size:9px;color:#8b95a7}
+.pf-cap{font-family:var(--f-mono);font-size:9px;color:var(--phone-sub)}
 .pf{display:flex;gap:8px;align-items:center;border:1px solid var(--phone-line);border-radius:8px;padding:8px}
 .pf-ic{width:30px;height:30px;border-radius:6px;background:var(--accent-soft);display:grid;place-items:center;font-size:14px;flex:none}
 .pf-b{flex:1;display:grid;gap:4px;min-width:0}
 .pf-b b{font-size:10px}
-.pf-s{position:relative;height:11px;font-size:9px;line-height:11px;color:#8b95a7;white-space:nowrap}
+.pf-s{position:relative;height:11px;font-size:9px;line-height:11px;color:var(--phone-sub);white-space:nowrap}
 .pf-s span{position:absolute;left:0;top:0}
 .pf-n{counter-reset:p var(--p);animation:pfN 3s infinite linear,pfA 3s infinite}
 .pf-n::after{content:"업로드 중… " counter(p) "%"}
@@ -220,7 +221,7 @@
 @keyframes pfB{0%,79%{opacity:0}80%,100%{opacity:1}}
 /* input / placeholder / validation */
 .in{border:1px solid var(--phone-line);border-radius:6px;padding:6px 8px;position:relative;min-height:26px}
-.in .ph-t{color:#8b95a7;animation:phT 4s infinite}
+.in .ph-t{color:var(--phone-sub);animation:phT 4s infinite}
 .in .typed{position:absolute;left:8px;top:6px;overflow:hidden;white-space:nowrap;animation:typ 4s infinite steps(10)}
 @keyframes phT{0%,25%{opacity:1}26%,100%{opacity:0}}
 @keyframes typ{0%,25%{width:0}60%,100%{width:90px}}
@@ -274,7 +275,7 @@
 @keyframes bNo{0%,48%,76%,100%{opacity:0}52%,72%{opacity:1}}
 .bst-cap{display:grid;justify-items:center;gap:2px;margin-top:6px}
 .bst-cap b{font-family:var(--f-mono);font-size:12px}
-.bst-cap span{font-size:10px;color:#8b95a7}
+.bst-cap span{font-size:10px;color:var(--phone-sub)}
 /* FAB */
 .fab{position:absolute;right:12px;bottom:14px;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:20px;box-shadow:0 4px 10px rgba(0,0,0,.3);animation:fab 3s infinite}
 @keyframes fab{0%,60%,100%{transform:none}70%{transform:scale(.88)}80%{transform:rotate(45deg)}}
@@ -316,7 +317,7 @@
 /* scroll bar / dim */
 .nav-bt{position:absolute;left:0;right:0;bottom:0;height:40px;border-top:1px solid var(--phone-line);display:flex;justify-content:space-around;align-items:center;background:var(--phone)}
 /* 하단 탭: 홈→검색→알림→MY 순서로 선택이 옮겨가고, 상단 제목·본문도 함께 바뀜 (1.5초 간격) */
-.nav-bt span{display:grid;justify-items:center;gap:3px;font-size:8px;font-weight:700;color:#8b95a7;animation:navOn 6s infinite}
+.nav-bt span{display:grid;justify-items:center;gap:3px;font-size:8px;font-weight:700;color:var(--phone-sub);animation:navOn 6s infinite}
 .nav-bt i{width:16px;height:16px;border-radius:4px;background:currentColor;opacity:.55;display:block}
 .nav-tt{position:relative;display:inline-block;width:40px;height:14px}
 .nav-tt b{position:absolute;left:0;top:0;opacity:0;animation:navTt 6s infinite}
@@ -324,7 +325,7 @@
 .nav-bt span:nth-child(3),.nav-tt b:nth-child(3){animation-delay:-3s}
 .nav-bt span:nth-child(4),.nav-tt b:nth-child(4){animation-delay:-1.5s}
 .nav-pg{animation:navPg 1.5s infinite}
-@keyframes navOn{0%,24%{color:var(--accent)}25%,100%{color:#8b95a7}}
+@keyframes navOn{0%,24%{color:var(--accent)}25%,100%{color:var(--phone-sub)}}
 @keyframes navTt{0%,24%{opacity:1}25%,100%{opacity:0}}
 @keyframes navPg{0%{opacity:.2;transform:translateY(4px)}20%,100%{opacity:1;transform:none}}
 /* segmented */
@@ -373,8 +374,8 @@
 .in.tf{animation:tfF 4s infinite}
 .in .tf-t{border-right:1.5px solid var(--accent);padding-right:1px;top:5px;line-height:15px;animation:tfT 4s infinite steps(4),tfC .5s infinite steps(1)}
 @keyframes tfT{0%,20%{width:0}50%,100%{width:46px}}
-.tf-x{position:absolute;right:7px;top:6px;font-size:10px;color:#8b95a7;animation:tfX 4s infinite}
-.tf-cnt{display:flex;justify-content:flex-end;font-size:9px;line-height:11px;color:#8b95a7;margin-top:-4px}
+.tf-x{position:absolute;right:7px;top:6px;font-size:10px;color:var(--phone-sub);animation:tfX 4s infinite}
+.tf-cnt{display:flex;justify-content:flex-end;font-size:9px;line-height:11px;color:var(--phone-sub);margin-top:-4px}
 .tf-n{height:11px;overflow:hidden}
 .tf-n>span{display:block;animation:tfN 4s infinite steps(4)}
 .tf-n i{display:block;height:11px;font-style:normal}
@@ -430,3 +431,7 @@
 .wv-url{font-family:var(--f-mono);font-size:8.5px;color:var(--muted);text-align:center}
 .lbl.wv-l{opacity:0;animation:wvL 5s infinite}
 @keyframes wvL{0%,72%{opacity:0}76%,100%{opacity:1}}
+/* 데모 공통 유틸: 애니메이션 끄기, 위험(삭제) 글자색(.danger), 줄 오른쪽 끝으로 */
+.ph .na{animation:none!important}
+.ph .danger{color:var(--bad)!important}
+.ph .end{margin-left:auto!important}

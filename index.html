@@ -9,12 +9,17 @@
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/ui-demo.css">
 <link rel="stylesheet" href="css/status-demo.css">
+<!-- 테마를 그리기 전에 적용 (깜빡임 방지). 저장된 값이 'dark'가 아니면 라이트 -->
+<script>{let t='light';try{if(localStorage.getItem('theme')==='dark')t='dark'}catch(e){}document.documentElement.dataset.theme=t}</script>
 </head>
 <body>
 <div class="wrap">
   <nav class="site-nav" aria-label="사전 종류">
     <a class="brand" href="#ui">이슈 리포트 용어 사전</a>
-    <div class="gnb-tabs"><a href="#ui" data-s="ui">UI/UX 용어</a><a href="#http" data-s="http">HTTP 상태 코드</a></div>
+    <div class="nav-r">
+      <div class="gnb-tabs"><a href="#ui" data-s="ui">UI/UX 용어</a><a href="#http" data-s="http">HTTP 상태 코드</a></div>
+      <button type="button" class="theme-btn" id="theme"></button>
+    </div>
   </nav>
   <!-- 문구는 사전별로 app.js의 DICTS에서 채움 -->
   <header class="hero">
@@ -44,7 +49,7 @@
       <div class="d-head">
         <div><span class="cat" id="d-cat"></span>
         <h2 id="d-title"></h2><span class="en" id="d-en"></span></div>
-        <button class="close" id="d-close" aria-label="닫기">✕</button>
+        <button type="button" class="close" id="d-close" aria-label="닫기">✕</button>
       </div>
       <section><h4>설명</h4><p id="d-desc"></p></section>
       <section id="d-when-s"><h4>이럴 때 보여요</h4><ul id="d-when"></ul></section>

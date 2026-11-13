@@ -1,13 +1,15 @@
 /* UI/UX 용어 데이터 — 새 용어는 UI_TERMS 배열에 추가하세요 */
 const HD=t=>`<div class="hd">${t}</div>`;
 const L=(n,c='')=>Array.from({length:n},(_,i)=>`<div class="ln ${i%3==2?'s':i%3==1?'m':''} ${c}"></div>`).join('');
-const PAGE=(t,inner='')=>HD(t)+`<div class="pg">${inner||L(3)+'<div class="blk"></div>'+L(4)}</div>`;
+// 줄 a개 + 그림 블록 + 줄 b개: 데모 화면의 기본 본문
+const BODY=(a,b)=>L(a)+'<div class="blk"></div>'+L(b);
+const PAGE=(t,inner=BODY(3,4))=>HD(t)+`<div class="pg">${inner}</div>`;
 // 장면 여러 개를 직접 넘겨 보는 데모 (넘김 버튼은 상세 화면에서 app.js가 붙임)
 const CAR=s=>`<div class="car"><div class="car-t" style="width:${s.length*100}%">${s.map(x=>`<div class="car-s">${x}</div>`).join('')}</div></div><div class="car-dots"><i class="on"></i>${'<i></i>'.repeat(s.length-1)}</div>`;
 const CUR=`<div class="cur"><svg width="14" height="20" viewBox="0 0 14 20" aria-hidden="true"><path d="M1 1v15l4-4 3 6 2.5-1-3-6h5.5z" fill="#1a1a1a" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg></div>`;
 // 커서 등은 버튼 바깥(래퍼)에 둠 — Disabled 투명도·Hover 밝기가 커서에 번지지 않게
-const BTN_ST=(c,n,k,x='')=>PAGE('결제',`${L(3)}<div class="blk"></div>${L(2)}<div class="bst-w ${c}"><div class="btn bst">결제하기</div>${x}</div><div class="bst-cap"><b>${n}</b><span>${k}</span></div>`);
-const HF_HD=HD('<span>←</span> 주문 상세<span style="margin-left:auto">⋮</span>');
+const BTN_ST=(c,n,k,x='')=>PAGE('결제',`${BODY(3,2)}<div class="bst-w ${c}"><div class="btn bst">결제하기</div>${x}</div><div class="bst-cap"><b>${n}</b><span>${k}</span></div>`);
+const HF_HD=HD('<span>←</span> 주문 상세<span class="end">⋮</span>');
 // 메뉴 아이콘: 점 아이콘(kb 세로 3개, mb 가로 3개, bt 3×3), 햄버거(≡), 장면 아래 설명 줄
 const MI=(k,n)=>`<span class="mi mi-${k}">${'<i></i>'.repeat(n)}</span>`;
 const MI_HB='<div class="hb hb-static"><i></i><i></i><i></i></div>';
@@ -17,6 +19,8 @@ const UI_TERMS=[
 /* ---------- 오버레이 ---------- */
 {id:'modal',ko:'모달',en:'Modal / Dialog',cat:'오버레이',
  short:'화면 위에 뜨고, 닫기 전까지 뒤 화면을 조작할 수 없는 창.',
+ alias:'팝업 팝업창 레이어 창 다이얼로그',
+ still:1.4,
  desc:'현재 화면 위에 레이어로 뜨는 창입니다. 뒤 화면은 딤(어두운 막)으로 가려지고, 사용자가 확인·취소·닫기 같은 동작을 해야 원래 화면으로 돌아갑니다. 삭제 확인, 약관 동의처럼 반드시 결정을 받아야 할 때 씁니다. 흔히 "팝업"이라고 부르지만, 개발·디자인 쪽에서는 모달 또는 다이얼로그라고 부르는 경우가 많습니다.',
  bugs:['딤 영역을 눌러도 닫히지 않거나, 반대로 닫히면 안 되는데 닫힘','모달이 열린 상태에서 뒤 화면이 스크롤됨(스크롤 락 누락)','ESC 키·안드로이드 뒤로가기로 닫히지 않음','모달 내용이 길 때 하단 버튼이 화면 밖으로 잘림'],
  bad:'팝업 뜰 때 뒤에가 움직여요',
@@ -26,6 +30,8 @@ const UI_TERMS=[
 
 {id:'dim',ko:'딤 / 스크림',en:'Dim / Scrim / Backdrop',cat:'오버레이',
  short:'모달·시트 뒤에 깔리는 반투명 검은 막.',
+ alias:'오버레이 배경',
+ still:1.4,
  desc:'모달, 바텀시트, 드로어가 열릴 때 뒤 화면을 어둡게 덮는 반투명 레이어입니다. 사용자의 시선을 앞쪽 요소에 모으고, 뒤 화면이 지금은 조작할 수 없다는 신호를 줍니다. 대개 딤을 탭하면 위 레이어가 닫히도록 설계합니다.',
  bugs:['딤이 화면 일부(상단 상태바, 하단 내비게이션)를 덮지 못함','레이어를 닫았는데 딤만 남아 화면 조작 불가','딤 위의 요소가 딤보다 아래에 깔림(z-index 문제)'],
  bad:'화면이 까맣게 남아서 안 눌려요',
@@ -35,6 +41,7 @@ const UI_TERMS=[
 
 {id:'bottom-sheet',ko:'바텀 시트',en:'Bottom Sheet',cat:'오버레이',
  short:'화면 아래에서 위로 올라오는 패널.',
+ alias:'하단 팝업 하프모달 액션시트',
  desc:'화면 하단에서 슬라이드업되는 패널입니다. 공유 옵션, 정렬·필터 선택, 상세 정보처럼 현재 화면 맥락을 유지한 채 추가 선택지를 보여줄 때 씁니다. 상단의 손잡이(그래버)를 끌어 높이를 바꾸거나 아래로 내려 닫을 수 있는 경우가 많습니다.',
  bugs:['아래로 스와이프해도 닫히지 않음','시트 내부 스크롤과 시트 드래그가 충돌함','키보드가 올라오면 시트 안의 입력창이 가려짐','iOS 홈 인디케이터 영역에 버튼이 겹침'],
  bad:'아래에서 나오는 창이 안 내려가요',
@@ -44,24 +51,28 @@ const UI_TERMS=[
 
 {id:'drawer',ko:'드로어 / 사이드 메뉴',en:'Drawer / Side Navigation',cat:'오버레이',
  short:'화면 옆에서 미끄러져 나오는 메뉴 패널.',
+ alias:'사이드바',
  desc:'화면 왼쪽(또는 오른쪽) 가장자리에서 밀려 나오는 패널입니다. 주로 햄버거 메뉴 버튼을 누르면 열리고, 전체 메뉴나 계정 정보가 들어갑니다. 서랍을 여닫는 모양이라 드로어라고 부릅니다.',
  bugs:['드로어가 열린 채로 다른 화면으로 이동해도 열려 있음','현재 페이지 메뉴 항목이 선택 상태로 표시되지 않음','가장자리 스와이프 제스처가 브라우저 뒤로가기와 충돌'],
  bad:'옆에 메뉴 나오는 거 안 닫혀요',
  good:'[사이드 드로어] 드로어에서 "마이페이지" 선택 후 화면 이동 시 드로어가 자동으로 닫히지 않음',
  rel:['hamburger','bottom-sheet','gnb'],
- demo:HD('<div class="hb hb-static"><i></i><i></i><i></i></div> 홈')+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="dim dm-dim"></div><div class="dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`},
+ demo:HD('<div class="hb hb-static"><i></i><i></i><i></i></div> 홈')+`<div class="pg">${BODY(3,3)}</div><div class="dim dm-dim"></div><div class="dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`},
 
 {id:'popover',ko:'팝오버',en:'Popover',cat:'오버레이',
  short:'버튼 근처에 작게 뜨는 말풍선 패널. 클릭으로 열림.',
+ alias:'더보기 메뉴 점세개 케밥 말풍선',
+ still:1.4,
  desc:'특정 요소 근처에 붙어서 뜨는 작은 패널입니다. 툴팁과 비슷해 보이지만 클릭(탭)으로 열리고, 안에 버튼이나 링크처럼 조작 가능한 요소가 들어갈 수 있다는 점이 다릅니다. 더보기(⋮) 메뉴가 대표적인 예입니다.',
  bugs:['화면 가장자리에서 팝오버가 잘려 보임','바깥 영역을 클릭해도 닫히지 않음','스크롤하면 팝오버가 기준 요소에서 떨어져 떠 있음'],
  bad:'점 세 개 누르면 나오는 거 잘려요',
  good:'[게시글 더보기 팝오버] 화면 오른쪽 끝 게시글에서 열면 팝오버 우측 20px가 뷰포트 밖으로 잘림',
  rel:['tooltip','dropdown','modal'],
- demo:HD('게시글<span style="margin-left:auto;font-size:14px">⋮</span>')+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="pv"><div>수정</div><div>공유</div><div style="color:var(--bad)">삭제</div></div>`},
+ demo:HD('게시글<span style="margin-left:auto;font-size:14px">⋮</span>')+`<div class="pg">${BODY(3,3)}</div><div class="pv"><div>수정</div><div>공유</div><div class="danger">삭제</div></div>`},
 
 {id:'tooltip',ko:'툴팁',en:'Tooltip',cat:'오버레이',
  short:'마우스를 올리면 뜨는 짧은 도움말 말풍선.',
+ alias:'말풍선 도움말',
  desc:'아이콘이나 버튼에 마우스를 올리거나(호버) 포커스했을 때 잠깐 나타나는 짧은 설명입니다. 정보 전달만 하고 안에서 클릭할 요소는 두지 않습니다. 모바일에는 호버가 없어서 길게 누르기나 ⓘ 아이콘 탭으로 대신하는 경우가 많습니다.',
  bugs:['툴팁이 기준 요소를 가려서 클릭이 안 됨','마우스를 치운 뒤에도 툴팁이 사라지지 않음','키보드 포커스로는 툴팁이 뜨지 않음(접근성)'],
  bad:'물음표 아이콘에 글씨가 안 사라져요',
@@ -72,6 +83,7 @@ const UI_TERMS=[
 /* ---------- 피드백 ---------- */
 {id:'toast',ko:'토스트',en:'Toast',cat:'피드백·상태',
  short:'잠깐 떴다가 저절로 사라지는 짧은 알림.',
+ alias:'알림 메시지',
  desc:'"저장되었습니다"처럼 작업 결과를 짧게 알리고 몇 초 뒤 자동으로 사라지는 메시지입니다. 사용자의 흐름을 막지 않으며, 보통 버튼 없이 텍스트만 있습니다. 토스트기에서 빵이 튀어 올랐다 내려가는 모습에서 이름이 왔습니다.',
  bugs:['토스트가 너무 빨리 사라져 읽을 수 없음','여러 번 누르면 토스트가 쌓여서 겹침','하단 내비게이션 바나 FAB 뒤에 가려짐','실패했는데 성공 토스트가 뜸'],
  bad:'저장하면 메시지가 이상해요',
@@ -81,6 +93,7 @@ const UI_TERMS=[
 
 {id:'snackbar',ko:'스낵바',en:'Snackbar',cat:'피드백·상태',
  short:'하단에 뜨는 알림 + 실행취소 같은 버튼 하나.',
+ alias:'실행취소 undo 하단 알림',
  desc:'토스트처럼 화면 하단에 잠깐 나타나는 알림인데, "실행취소"나 "보기" 같은 액션 버튼을 하나 가질 수 있습니다. 머티리얼 디자인에서 쓰는 이름이라 안드로이드 쪽에서 자주 들립니다. 실무에서는 토스트와 섞어 부르기도 하니 버튼 유무로 구분하면 정확합니다.',
  bugs:['"실행취소"를 눌러도 삭제가 복구되지 않음','스낵바가 사라지기 전에 다른 화면으로 가면 다음 화면에 그대로 남음','버튼 터치 영역이 너무 작음'],
  bad:'지우고 나서 되돌리기가 안 돼요',
@@ -90,6 +103,7 @@ const UI_TERMS=[
 
 {id:'skeleton',ko:'스켈레톤 UI',en:'Skeleton Screen',cat:'피드백·상태',
  short:'데이터 로딩 중 보여주는 회색 뼈대 화면.',
+ alias:'로딩 shimmer',
  desc:'콘텐츠가 불러와지는 동안 실제 레이아웃과 비슷한 회색 박스를 먼저 보여주는 방식입니다. 빈 화면이나 스피너보다 덜 기다리는 느낌을 줍니다. 반짝이며 흐르는 효과를 쉬머(shimmer)라고 부릅니다.',
  bugs:['스켈레톤과 실제 콘텐츠의 크기가 달라 로딩 후 화면이 덜컹거림(레이아웃 시프트)','데이터가 다 왔는데도 스켈레톤이 계속 남음','API 오류 시 스켈레톤에서 멈추고 오류 안내가 없음'],
  bad:'로딩 화면에서 안 넘어가요',
@@ -99,15 +113,17 @@ const UI_TERMS=[
 
 {id:'spinner',ko:'스피너 / 로딩 인디케이터',en:'Spinner / Loading Indicator',cat:'피드백·상태',
  short:'빙글빙글 도는 로딩 표시.',
+ alias:'로딩',
  desc:'작업이 진행 중이라는 것을 알려주는 회전 아이콘입니다. 얼마나 남았는지는 알려주지 않습니다(불확정 진행). 버튼 안에 넣어 중복 클릭을 막는 용도로도 씁니다.',
  bugs:['로딩 중에도 버튼이 눌려 요청이 중복 전송됨','스피너가 끝나지 않고 계속 돎','스피너 없이 화면이 멈춘 것처럼 보임'],
  bad:'결제 버튼 여러 번 눌려요',
  good:'[결제하기 버튼] 결제 요청 중 버튼에 로딩 스피너가 없고 비활성화되지 않아 연속 탭 시 결제 요청 2건 발생',
  rel:['skeleton','progress'],
- demo:PAGE('결제',`${L(3)}<div class="blk"></div>${L(2)}<div class="btn" style="display:flex;justify-content:center;margin-top:30px"><div class="spin" style="border-color:rgba(255,255,255,.4);border-top-color:#fff;width:14px;height:14px"></div></div>`)},
+ demo:PAGE('결제',`${BODY(3,2)}<div class="btn" style="display:flex;justify-content:center;margin-top:30px"><div class="spin" style="border-color:rgba(255,255,255,.4);border-top-color:#fff;width:14px;height:14px"></div></div>`)},
 
 {id:'progress',ko:'프로그레스 바',en:'Progress Bar',cat:'피드백·상태',
  short:'진행률을 막대로 보여주는 표시.',
+ alias:'진행률 로딩바 퍼센트 업로드',
  desc:'업로드, 다운로드, 설치처럼 진행 정도를 알 수 있는 작업에서 얼마나 진행됐는지 막대 길이로 보여줍니다. 진행률을 알 수 없을 때는 막대가 계속 흐르는 불확정(indeterminate) 형태를 씁니다.',
  bugs:['100%가 됐는데 완료 처리가 안 됨','진행률이 뒤로 줄어들거나 100%를 넘어감','퍼센트 숫자와 막대 길이가 일치하지 않음'],
  bad:'업로드가 다 찼는데 안 끝나요',
@@ -117,52 +133,61 @@ const UI_TERMS=[
 
 {id:'empty-state',ko:'빈 상태 화면',en:'Empty State',cat:'피드백·상태',
  short:'보여줄 데이터가 없을 때 나오는 안내 화면.',
+ alias:'결과없음 0건 노데이터 no data',
+ still:1.4,
  desc:'검색 결과가 없거나, 장바구니가 비었거나, 아직 작성한 글이 없을 때 보여주는 화면입니다. 왜 비어 있는지와 다음에 할 일(예: "상품 둘러보기" 버튼)을 안내하는 것이 좋습니다. QA에서는 데이터 0건 케이스로 자주 확인합니다.',
  bugs:['데이터가 없을 때 아무것도 안 나오고 흰 화면만 보임','빈 상태 문구가 상황과 맞지 않음(검색 결과 없음인데 "아직 글이 없어요")','데이터가 있는데 잠깐 빈 상태가 깜빡임'],
  bad:'검색하면 아무것도 안 나와요',
  good:'[검색 결과] 결과 0건일 때 빈 상태 화면(안내 문구·추천 키워드)이 노출되지 않고 흰 화면만 표시됨',
  rel:['skeleton'],
- demo:HD('장바구니')+`<div class="es"><div class="ic">🛒</div><b>장바구니가 비었어요</b><div style="color:#8b95a7">마음에 드는 상품을 담아보세요</div><div class="btn">쇼핑하러 가기</div></div>`},
+ demo:HD('장바구니')+`<div class="es"><div class="ic">🛒</div><b>장바구니가 비었어요</b><div style="color:var(--phone-sub)">마음에 드는 상품을 담아보세요</div><div class="btn">쇼핑하러 가기</div></div>`},
 
 {id:'badge',ko:'배지',en:'Badge',cat:'피드백·상태',
  short:'아이콘 모서리에 붙는 숫자나 빨간 점.',
+ alias:'뱃지 알림 숫자 new',
+ still:1.4,
  desc:'알림 아이콘 위의 빨간 숫자처럼 새 소식이나 개수를 알려주는 작은 표시입니다. 숫자 없이 점만 찍는 것을 도트 배지라고 합니다. 상품 카드의 "NEW", "BEST" 같은 라벨을 배지라고 부르기도 합니다.',
  bugs:['알림을 모두 읽었는데 배지 숫자가 사라지지 않음','99+ 처리 없이 숫자가 길어져 배지가 찌그러짐','배지 숫자와 실제 알림 개수가 다름'],
  bad:'알림 빨간 거 안 없어져요',
  good:'[알림 탭 배지] 알림 3건 모두 읽음 처리 후에도 하단 탭 알림 아이콘에 배지 "3"이 계속 노출됨',
  rel:['chip','bottom-nav'],
- demo:HD('홈')+`<div class="pg">${L(3)}<div class="blk"></div>${L(2)}<div style="display:flex;gap:24px;justify-content:center;margin-top:16px"><div class="bd-wrap"><span class="bd">3</span></div><div class="bd-wrap"><span class="bd">99+</span></div><div class="bd-wrap"><span class="bd dot"></span></div></div></div>`},
+ demo:HD('홈')+`<div class="pg">${BODY(3,2)}<div style="display:flex;gap:24px;justify-content:center;margin-top:16px"><div class="bd-wrap"><span class="bd">3</span></div><div class="bd-wrap"><span class="bd">99+</span></div><div class="bd-wrap"><span class="bd dot"></span></div></div></div>`},
 
 {id:'push',ko:'푸시 알림',en:'Push Notification',cat:'피드백·상태',
  short:'앱을 쓰고 있지 않아도 휴대폰 화면 위로 오는 알림.',
+ alias:'푸시 노티 notification 알림센터 잠금화면 앱알림 fcm apns',
  desc:'앱이 꺼져 있거나 백그라운드에 있어도 서버가 보내 휴대폰 잠금 화면과 알림 센터에 표시되는 알림입니다. 앱 안에서만 잠깐 뜨는 토스트·스낵바와는 다릅니다. 알림을 눌렀을 때 관련 화면(예: 주문 상세)으로 바로 이동하는 동작이 핵심이라, 앱이 꺼진 상태 / 백그라운드 / 사용 중인 상태를 나눠서 확인합니다. 기기 설정에서 알림 권한을 껐을 때의 동작도 테스트 대상입니다.',
  bugs:['알림을 눌러도 해당 화면이 아니라 앱 홈으로 이동함','앱이 완전히 꺼진 상태에서 알림을 누르면 빈 화면이 뜸','같은 알림이 두 번 옴','알림 권한을 껐는데도 알림이 옴'],
  bad:'알림 눌렀는데 이상한 데로 가요',
  good:'[배송 시작 푸시] 앱 종료 상태에서 푸시 알림 탭 시 앱 홈 화면으로 진입함. 기대 결과: 해당 주문의 배송 조회 화면으로 이동',
  rel:['toast','snackbar','deep-link','badge'],
- demo:`<div class="fg-home"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="pu-bn"><span class="pu-ic"></span><div><b>예시몰</b>주문하신 상품이 배송을 시작했어요</div><em>지금</em></div><div class="tap" style="left:96px;top:34px"></div><div class="app-in">${PAGE('배송 조회',`<div class="pu-st"><b>배송 중</b><span>오늘 도착 예정</span></div>${L(3)}<div class="blk"></div>${L(2)}`)}</div><span class="lbl app-in-l" style="left:8px;bottom:8px">알림 탭 → 배송 조회 화면</span>`},
+ demo:`<div class="fg-home"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="pu-bn"><span class="pu-ic"></span><div><b>예시몰</b>주문하신 상품이 배송을 시작했어요</div><em>지금</em></div><div class="tap" style="left:96px;top:34px"></div><div class="app-in">${PAGE('배송 조회',`<div class="pu-st"><b>배송 중</b><span>오늘 도착 예정</span></div>${BODY(3,2)}`)}</div><span class="lbl app-in-l" style="left:8px;bottom:8px">알림 탭 → 배송 조회 화면</span>`},
 
 /* ---------- 내비게이션 ---------- */
 {id:'gnb',ko:'GNB / LNB',en:'Global / Local Navigation Bar',cat:'내비게이션',
  short:'모든 페이지 공통 상단 메뉴(GNB)와 영역별 하위 메뉴(LNB).',
+ alias:'헤더 상단 메뉴',
+ still:1.4,
  desc:'GNB(Global Navigation Bar)는 사이트 어디서나 똑같이 보이는 최상위 메뉴, 보통 상단 바입니다. LNB(Local Navigation Bar)는 특정 메뉴 안에서만 보이는 하위 메뉴로, 주로 왼쪽에 세로로 놓입니다. 한국 웹 실무에서 아주 많이 쓰는 용어입니다.',
  bugs:['특정 페이지에서 GNB가 사라지거나 다른 형태로 나옴','현재 위치 메뉴가 GNB/LNB에서 활성화 표시되지 않음','LNB가 콘텐츠와 겹침'],
  bad:'위에 메뉴가 이상해요',
  good:'[마이페이지 > 주문내역] LNB의 "주문내역" 항목이 활성 상태(굵게·강조색)로 표시되지 않음',
  rel:['breadcrumb','tab','bottom-nav'],
- demo:`<div class="gnb"><b>홈</b><span>쇼핑</span><span>이벤트</span><span>MY</span></div><div class="lnb"><b style="color:var(--accent)">주문내역</b><span>쿠폰</span><span>찜</span><span>설정</span></div><div class="pg" style="margin-left:58px">${L(4)}<div class="blk"></div>${L(2)}</div><span class="lbl" style="right:6px;top:4px">GNB</span><span class="lbl" style="left:6px;bottom:8px">LNB</span>`},
+ demo:`<div class="gnb"><b>홈</b><span>쇼핑</span><span>이벤트</span><span>MY</span></div><div class="lnb"><b style="color:var(--accent)">주문내역</b><span>쿠폰</span><span>찜</span><span>설정</span></div><div class="pg" style="margin-left:58px">${BODY(4,2)}</div><span class="lbl" style="right:6px;top:4px">GNB</span><span class="lbl" style="left:6px;bottom:8px">LNB</span>`},
 
 {id:'bottom-nav',ko:'하단 탭 바',en:'Bottom Navigation / Tab Bar',cat:'내비게이션',
  short:'앱 하단에 고정된 주요 메뉴 아이콘 줄.',
+ alias:'하단 메뉴 탭바 바텀 네비',
  desc:'모바일 앱 화면 맨 아래에 고정된 3~5개의 주요 메뉴입니다. iOS에서는 탭 바, 안드로이드에서는 바텀 내비게이션이라고 부릅니다. 앱의 GNB 역할을 합니다.',
  bugs:['키보드가 올라오면 탭 바가 키보드 위로 따라 올라옴','같은 탭을 다시 눌러도 맨 위로 스크롤되지 않음','특정 화면에서 탭 바가 콘텐츠 마지막 줄을 가림'],
  bad:'아래 메뉴가 글을 가려요',
  good:'[주문내역 목록] 목록 마지막 항목이 하단 탭 바에 가려져 끝까지 스크롤해도 보이지 않음',
  rel:['gnb','tab','fab'],
- demo:HD('<span class="nav-tt"><b>홈</b><b>검색</b><b>알림</b><b>MY</b></span>')+`<div class="pg nav-pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="nav-bt">${['홈','검색','알림','MY'].map(n=>`<span><i></i>${n}</span>`).join('')}</div>`},
+ demo:HD('<span class="nav-tt"><b>홈</b><b>검색</b><b>알림</b><b>MY</b></span>')+`<div class="pg nav-pg">${BODY(3,4)}</div><div class="nav-bt">${['홈','검색','알림','MY'].map(n=>`<span><i></i>${n}</span>`).join('')}</div>`},
 
 {id:'hamburger',ko:'메뉴 아이콘',en:'Hamburger · Kebab · Meatball · Bento',cat:'내비게이션',
  short:'≡ ⋮ ⋯ ⊞ 처럼 생긴 메뉴 버튼들. 모양마다 이름과 쓰임이 달라요.',
+ alias:'메뉴 버튼 줄세개 ≡ 햄버거 케밥 꼬치 미트볼 벤토 도시락 점세개 점아홉개 더보기 ⋮ ⋯ 도너 kebab meatball bento',
  desc:'메뉴를 여는 아이콘은 모양에 따라 부르는 이름이 다릅니다. 가로줄 세 개(≡)는 햄버거, 세로 점 세 개(⋮)는 케밥(꼬치), 가로 점 세 개(⋯)는 미트볼, 점 아홉 개 격자는 벤토(도시락)라고 부릅니다. 햄버거는 앱 전체 메뉴(드로어)를, 케밥과 미트볼은 수정·삭제 같은 "더보기" 메뉴를, 벤토는 같은 회사의 다른 서비스나 앱 목록을 여는 데 주로 씁니다. 케밥은 화면 상단, 미트볼은 목록의 각 항목에 많이 쓰지만 팀마다 다르니, 이슈에는 아이콘 이름과 위치(예: "게시글 우측 상단 케밥 아이콘")를 함께 적으면 정확합니다. 줄 길이가 점점 짧아지는 아이콘은 도너라고 부르며 필터·정렬에 씁니다.',
  bugs:['메뉴를 닫았는데 햄버거 아이콘이 X 상태로 남음','목록 항목의 미트볼 메뉴를 눌렀는데 다른 항목의 메뉴가 열림','케밥 메뉴가 화면 오른쪽 끝에서 잘려 보임','아이콘 터치 영역이 작아 잘 눌리지 않음'],
  bad:'점 세 개 눌렀는데 이상해요',
@@ -170,13 +195,14 @@ const UI_TERMS=[
  rel:['drawer','popover','gnb'],
  demo:CAR([
    HD('메뉴 아이콘 4종')+`<div class="pg"><div class="mi-ov">${[[MI_HB,'햄버거','전체 메뉴'],[MI('kb',3),'케밥 (꼬치)','화면 더보기'],[MI('mb',3),'미트볼','항목 더보기'],[MI('bt',9),'벤토 (도시락)','서비스 목록']].map(([i,n,k])=>`<div class="mi-t"><div class="mi-ic">${i}</div><b>${n}</b><span>${k}</span></div>`).join('')}</div></div>`,
-   HD(`${MI_HB} 홈`).replace('class="hb hb-static"','class="hb"')+`<div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="hb-dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`+MI_CAP(MI_HB,'햄버거','전체 메뉴(드로어)를 열어요'),
-   HD(`게시글<span class="mi-press" style="margin-left:auto">${MI('kb',3)}</span>`)+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="pv"><div>수정</div><div>공유</div><div style="color:var(--bad)">삭제</div></div>`+MI_CAP(MI('kb',3),'케밥 (꼬치)','이 화면 전체의 더보기 메뉴'),
-   HD('알림함')+`<div class="pg" style="gap:0">${[0,1,2].map(n=>`<div class="mi-row"><div class="mi-row-t">${L(2)}</div><span${n==1?' class="mi-press"':''}>${MI('mb',3)}</span></div>`).join('')}</div><div class="pv" style="top:108px"><div>읽음 표시</div><div>알림 끄기</div><div style="color:var(--bad)">삭제</div></div>`+MI_CAP(MI('mb',3),'미트볼','이 항목만의 더보기 메뉴'),
-   HD(`홈<span class="mi-press" style="margin-left:auto">${MI('bt',9)}</span>`)+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="mi-apps">${['쇼핑','페이','지도','메일','캘린더','드라이브'].map(a=>`<div><i></i>${a}</div>`).join('')}</div>`+MI_CAP(MI('bt',9),'벤토 (도시락)','다른 서비스·앱 목록을 열어요')])},
+   HD(`${MI_HB} 홈`).replace('class="hb hb-static"','class="hb"')+`<div class="pg">${BODY(3,4)}</div><div class="hb-dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`+MI_CAP(MI_HB,'햄버거','전체 메뉴(드로어)를 열어요'),
+   HD(`게시글<span class="mi-press end">${MI('kb',3)}</span>`)+`<div class="pg">${BODY(3,3)}</div><div class="pv"><div>수정</div><div>공유</div><div class="danger">삭제</div></div>`+MI_CAP(MI('kb',3),'케밥 (꼬치)','이 화면 전체의 더보기 메뉴'),
+   HD('알림함')+`<div class="pg" style="gap:0">${[0,1,2].map(n=>`<div class="mi-row"><div class="mi-row-t">${L(2)}</div><span${n==1?' class="mi-press"':''}>${MI('mb',3)}</span></div>`).join('')}</div><div class="pv" style="top:108px"><div>읽음 표시</div><div>알림 끄기</div><div class="danger">삭제</div></div>`+MI_CAP(MI('mb',3),'미트볼','이 항목만의 더보기 메뉴'),
+   HD(`홈<span class="mi-press end">${MI('bt',9)}</span>`)+`<div class="pg">${BODY(3,3)}</div><div class="mi-apps">${['쇼핑','페이','지도','메일','캘린더','드라이브'].map(a=>`<div><i></i>${a}</div>`).join('')}</div>`+MI_CAP(MI('bt',9),'벤토 (도시락)','다른 서비스·앱 목록을 열어요')])},
 
 {id:'tab',ko:'탭',en:'Tabs',cat:'내비게이션',
  short:'같은 화면 안에서 내용을 바꿔 보여주는 버튼 줄.',
+ alias:'탭메뉴 인디케이터 밑줄',
  desc:'같은 화면 안에서 여러 묶음의 콘텐츠를 전환해 보여주는 컴포넌트입니다. 선택된 탭 아래에 밑줄(인디케이터)이 움직입니다. 탭을 바꿔도 페이지 주소는 그대로인 경우가 많습니다.',
  bugs:['탭을 바꾼 뒤 뒤로가기하면 이전 탭이 아닌 첫 탭으로 돌아감','인디케이터 위치와 선택된 탭이 어긋남','탭 전환 시 이전 탭의 스크롤 위치가 초기화됨'],
  bad:'탭 밑줄이 따로 놀아요',
@@ -186,6 +212,8 @@ const UI_TERMS=[
 
 {id:'breadcrumb',ko:'브레드크럼',en:'Breadcrumb',cat:'내비게이션',
  short:'홈 > 카테고리 > 현재 페이지 같은 위치 경로.',
+ alias:'경로 위치 빵부스러기',
+ still:1.4,
  desc:'현재 페이지가 사이트 구조에서 어디쯤인지 경로로 보여주는 줄입니다. 헨젤과 그레텔의 빵부스러기에서 이름을 따왔습니다. 각 단계를 눌러 상위 페이지로 이동할 수 있습니다.',
  bugs:['경로가 실제 카테고리와 다름','중간 단계 링크가 동작하지 않음','긴 카테고리명이 줄바꿈되며 겹침'],
  bad:'위에 경로가 틀려요',
@@ -195,6 +223,8 @@ const UI_TERMS=[
 
 {id:'pagination',ko:'페이지네이션',en:'Pagination',cat:'내비게이션',
  short:'1 2 3 … 처럼 목록을 페이지 단위로 나누는 버튼.',
+ alias:'페이징 페이지 번호 이전 다음',
+ still:1.4,
  desc:'긴 목록을 여러 페이지로 나누고, 번호나 이전·다음 버튼으로 이동하게 하는 방식입니다. 무한 스크롤과 대비되는 방식이라 둘을 구분해서 말해야 합니다.',
  bugs:['마지막 페이지에서 "다음" 버튼이 활성화되어 있음','2페이지에 1페이지 데이터가 중복 노출됨','필터를 바꿨는데 페이지가 1로 초기화되지 않음'],
  bad:'다음 페이지에 같은 게 나와요',
@@ -204,6 +234,7 @@ const UI_TERMS=[
 
 {id:'infinite-scroll',ko:'무한 스크롤',en:'Infinite Scroll',cat:'내비게이션',
  short:'바닥까지 내리면 다음 목록이 자동으로 이어 붙는 방식.',
+ alias:'더보기 load more 자동 로딩',
  desc:'목록 끝에 도달하면 다음 데이터를 자동으로 불러와 이어 붙이는 방식입니다. SNS 피드에서 흔합니다. 비슷하게 버튼을 눌러야 더 불러오는 방식은 "더보기(Load more)"라고 따로 부릅니다.',
  bugs:['끝까지 내려도 다음 목록을 불러오지 않음','같은 데이터가 두 번 붙음','상세 페이지에 갔다 돌아오면 스크롤 위치가 맨 위로 초기화됨'],
  bad:'밑으로 내리면 더 안 나와요',
@@ -213,6 +244,8 @@ const UI_TERMS=[
 
 {id:'stepper',ko:'스테퍼 / 단계 표시',en:'Stepper / Progress Steps',cat:'내비게이션',
  short:'1단계 → 2단계 → 3단계 진행 상황 표시.',
+ alias:'단계 진행 스텝 수량 +-',
+ still:2,
  desc:'회원가입, 주문처럼 여러 단계로 나뉜 과정에서 지금 몇 번째 단계인지 보여주는 표시입니다. 참고로 수량을 +/-로 조절하는 컨트롤도 "스테퍼"라고 부르니, 보고할 때 어느 쪽인지 같이 적어주면 좋습니다.',
  bugs:['이전 단계로 돌아가도 단계 표시가 바뀌지 않음','완료된 단계를 눌러 이동할 수 있어야 하는데 동작하지 않음'],
  bad:'회원가입 단계가 안 맞아요',
@@ -222,35 +255,40 @@ const UI_TERMS=[
 
 {id:'fab',ko:'FAB (플로팅 액션 버튼)',en:'Floating Action Button',cat:'내비게이션',
  short:'화면 위에 떠 있는 동그란 주요 버튼.',
+ alias:'플로팅 맨위로',
+ still:1.4,
  desc:'화면 오른쪽 아래 같은 고정 위치에 떠 있는 원형 버튼으로, 그 화면의 가장 중요한 동작(글쓰기, 추가 등)을 담당합니다. 스크롤해도 같은 자리에 머뭅니다. "맨 위로" 버튼도 같은 형태로 만드는 경우가 많습니다.',
  bugs:['FAB가 목록 마지막 항목의 버튼을 가려 누를 수 없음','토스트·스낵바와 겹침','키보드가 올라오면 FAB가 입력창을 가림'],
  bad:'동그란 버튼 때문에 뭐가 안 눌려요',
  good:'[게시판 글쓰기 FAB] 목록 최하단 게시글의 "좋아요" 버튼이 FAB에 가려져 탭 불가',
  rel:['bottom-nav','snackbar'],
- demo:PAGE('게시판',`${L(2)}<div class="blk"></div>${L(2)}<div class="blk"></div>${L(2)}`)+`<div class="fab">+</div>`},
+ demo:PAGE('게시판',`${BODY(2,2)}<div class="blk"></div>${L(2)}`)+`<div class="fab">+</div>`},
 
 {id:'sticky',ko:'스티키 헤더',en:'Sticky Header',cat:'콘텐츠·레이아웃',
  short:'스크롤해도 상단에 붙어 있는 영역.',
+ alias:'고정 헤더',
  desc:'처음엔 일반 콘텐츠처럼 있다가 스크롤하면 화면 상단에 달라붙어 계속 보이는 영역입니다. 상단 바, 탭, 필터 바에 자주 씁니다. 항상 같은 자리에 떠 있는 고정(fixed)과는 동작이 조금 다릅니다.',
  bugs:['스크롤 시 헤더가 붙지 않고 같이 올라감','고정된 헤더가 콘텐츠 첫 줄을 가림','헤더가 붙을 때 화면이 덜컹 튐'],
  bad:'위에 바가 내용 가려요',
  good:'[검색 결과 필터 바] 스크롤 시 스티키 필터 바가 첫 번째 상품 카드의 상단 40px를 가림',
  rel:['gnb','tab'],
- demo:`<div class="stk-c"><div class="blk" style="height:50px"></div><div style="height:30px"></div>${L(12)}</div><div class="stk-t tb"><span>전체</span><span>할인</span><span>무료배송</span><i class="ind" style="animation:none"></i></div><div class="stk-h">${HD('검색 결과')}</div>`},
+ demo:`<div class="stk-c"><div class="blk" style="height:50px"></div><div style="height:30px"></div>${L(12)}</div><div class="stk-t tb"><span>전체</span><span>할인</span><span>무료배송</span><i class="ind na"></i></div><div class="stk-h">${HD('검색 결과')}</div>`},
 
 {id:'header-footer',ko:'헤더 / 푸터',en:'Header / Footer',cat:'콘텐츠·레이아웃',
  short:'화면 맨 위 제목 영역(헤더)과 맨 아래 정보 영역(푸터).',
+ alias:'상단바 앱바 타이틀바 네비게이션바 뒤로가기 푸터 회사정보 약관',
  desc:'헤더는 화면 맨 위에서 뒤로가기(←), 화면 제목, 검색·더보기 같은 버튼을 담는 영역입니다. 앱에서는 앱 바·내비게이션 바·타이틀 바라고도 부릅니다. 푸터는 페이지 맨 아래에서 회사 정보, 이용약관, 고객센터 링크 등을 보여주는 영역으로 주로 웹에서 씁니다. 화면 하단에 고정된 버튼 영역(예: "구매하기" 바)은 하단 고정 버튼(CTA 바)이라고 따로 부르기도 합니다.',
  bugs:['헤더 제목이 이전 화면 제목으로 남아 있음','헤더의 뒤로가기(←) 버튼이 동작하지 않거나 엉뚱한 화면으로 이동','긴 제목이 말줄임 없이 헤더 버튼과 겹침','푸터 약관·고객센터 링크가 잘못된 페이지로 연결됨','내용이 짧은 페이지에서 푸터가 화면 중간에 떠 있음'],
  bad:'위에 제목이 이상하게 나와요',
  good:'[주문 상세 헤더] 주문내역 → 주문 상세 진입 시 헤더 제목이 "주문 상세"가 아닌 "주문내역"으로 표시됨',
  rel:['gnb','sticky','bottom-nav'],
  demo:CAR([
-  `<div class="car-hl top">${HF_HD}</div><div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><span class="lbl" style="left:10px;top:38px">① 헤더 Header</span>`,
-  `${HF_HD}<div class="pg">${L(3)}<div class="blk"></div>${L(2)}</div><span class="lbl" style="left:10px;bottom:84px">② 푸터 Footer</span><div class="hf-ft car-hl bot"><div>이용약관 · 개인정보처리방침</div><div>고객센터 1588-0000</div><div>© 예시컴퍼니</div></div>`])},
+  `<div class="car-hl top">${HF_HD}</div><div class="pg">${BODY(3,4)}</div><span class="lbl" style="left:10px;top:38px">① 헤더 Header</span>`,
+  `${HF_HD}<div class="pg">${BODY(3,2)}</div><span class="lbl" style="left:10px;bottom:84px">② 푸터 Footer</span><div class="hf-ft car-hl bot"><div>이용약관 · 개인정보처리방침</div><div>고객센터 1588-0000</div><div>© 예시컴퍼니</div></div>`])},
 
 {id:'deep-link',ko:'딥링크',en:'Deep Link',cat:'내비게이션',
  short:'링크를 누르면 앱의 특정 화면으로 바로 열리는 것.',
+ alias:'링크 공유링크 앱링크 유니버설링크 디퍼드 deeplink applink 앱으로 열기',
  desc:'링크를 눌렀을 때 앱의 첫 화면이 아니라 상품 상세, 이벤트 페이지 같은 특정 화면으로 바로 이동시키는 링크입니다. 문자, 메신저, SNS, 광고, 푸시 알림에서 많이 쓰입니다. 앱이 설치되어 있으면 앱으로, 없으면 앱 스토어나 웹 페이지로 보내는 경우가 많아 앱 설치 여부, 로그인 여부, 앱 실행 상태별로 나눠 확인합니다.',
  bugs:['링크를 누르면 앱 홈으로만 열리고 해당 상품으로 이동하지 않음','로그인이 필요한 화면이면 로그인 후 원래 화면으로 돌아오지 않음','앱이 없을 때 스토어가 아니라 오류 페이지로 이동함','특정 메신저 안에서 누를 때만 동작하지 않음'],
  bad:'링크 누르면 앱만 켜져요',
@@ -261,6 +299,8 @@ const UI_TERMS=[
 /* ---------- 입력·컨트롤 ---------- */
 {id:'dropdown',ko:'드롭다운 / 셀렉트 박스',en:'Dropdown / Select',cat:'입력·컨트롤',
  short:'눌렀을 때 선택지 목록이 아래로 펼쳐지는 입력.',
+ alias:'콤보박스 선택',
+ still:1.4,
  desc:'눌렀을 때 선택지 목록이 펼쳐지고 하나를 고르는 컨트롤입니다. 입력 폼에서 값을 고르는 것은 셀렉트 박스, 메뉴를 펼치는 것은 드롭다운 메뉴라고 나눠 부르기도 합니다. 펼쳐지는 목록은 옵션 리스트라고 합니다.',
  bugs:['선택한 값이 박스에 반영되지 않음','옵션 리스트가 화면 아래로 잘림','바깥을 눌러도 목록이 닫히지 않음'],
  bad:'선택해도 안 바뀌어요',
@@ -270,15 +310,18 @@ const UI_TERMS=[
 
 {id:'toggle',ko:'토글 스위치',en:'Toggle / Switch',cat:'입력·컨트롤',
  short:'켜기/끄기 두 상태를 바로 바꾸는 스위치.',
+ alias:'스위치 on off',
  desc:'켜짐/꺼짐 두 상태를 즉시 전환하는 스위치입니다. 저장 버튼 없이 누르는 순간 적용되는 것이 일반적입니다. 여러 항목 중 고르거나 저장 버튼을 눌러야 반영되는 설정에는 체크박스가 더 맞습니다.',
  bugs:['토글을 켜고 화면을 다시 들어오면 꺼져 있음(상태 저장 안 됨)','토글 UI는 바뀌었는데 실제 기능에 반영되지 않음','빠르게 연타하면 UI 상태와 서버 상태가 달라짐'],
  bad:'알림 켰는데 다시 꺼져 있어요',
  good:'[설정 > 마케팅 알림 토글] ON으로 변경 후 앱 재실행 시 OFF로 초기화됨',
  rel:['checkbox','segmented'],
- demo:PAGE('알림 설정',`<div class="tg-row"><span>푸시 알림</span><div class="tg"></div></div>${L(1)}<div class="tg-row"><span>야간 알림</span><div class="tg" style="animation:none"></div></div>${L(1)}<div class="tg-row"><span>마케팅</span><div class="tg" style="animation:none"></div></div>`)},
+ demo:PAGE('알림 설정',`<div class="tg-row"><span>푸시 알림</span><div class="tg"></div></div>${L(1)}<div class="tg-row"><span>야간 알림</span><div class="tg na"></div></div>${L(1)}<div class="tg-row"><span>마케팅</span><div class="tg na"></div></div>`)},
 
 {id:'checkbox',ko:'체크박스',en:'Checkbox',cat:'입력·컨트롤',
  short:'여러 개를 동시에 고를 수 있는 네모 선택 칸.',
+ alias:'체크 전체동의 약관',
+ still:1.4,
  desc:'여러 항목 중 몇 개든 골라 선택할 수 있는 네모 칸입니다. 일부만 선택된 상태를 보여주는 "-" 표시를 중간 상태(indeterminate)라고 합니다. 약관의 "전체 동의"가 대표적인 테스트 포인트입니다.',
  bugs:['"전체 동의" 체크 후 하위 항목 하나를 해제해도 전체 동의가 체크된 채로 남음','라벨 텍스트를 눌러도 체크되지 않음','필수 항목 미체크 상태에서 다음 단계로 넘어가짐'],
  bad:'동의 체크가 이상해요',
@@ -288,6 +331,8 @@ const UI_TERMS=[
 
 {id:'radio',ko:'라디오 버튼',en:'Radio Button',cat:'입력·컨트롤',
  short:'여러 개 중 하나만 고르는 동그란 선택 버튼.',
+ alias:'단일선택 동그라미',
+ still:1.4,
  desc:'여러 선택지 중 하나만 고를 수 있는 동그란 버튼입니다. 하나를 고르면 기존 선택은 자동으로 풀립니다. 옛날 라디오의 채널 버튼에서 이름이 왔습니다.',
  bugs:['두 개 이상이 동시에 선택됨','기본 선택값이 없어 아무것도 안 고른 채 제출 가능','선택 후 다른 화면에 갔다 오면 선택이 풀림'],
  bad:'결제 수단이 두 개 다 선택돼요',
@@ -297,6 +342,7 @@ const UI_TERMS=[
 
 {id:'segmented',ko:'세그먼트 컨트롤',en:'Segmented Control',cat:'입력·컨트롤',
  short:'붙어 있는 버튼 몇 개 중 하나를 고르는 스위치.',
+ alias:'토글 버튼 기간 선택 일주월',
  desc:'2~4개의 버튼이 한 덩어리로 붙어 있고 그중 하나가 선택되는 컨트롤입니다. 보기 방식(리스트/그리드), 기간(일/주/월) 전환에 씁니다. 탭과 비슷하지만 주로 같은 데이터의 보기 방식을 바꿀 때 씁니다.',
  bugs:['선택된 세그먼트 배경이 다른 칸으로 밀려 표시됨','"월" 선택 후 데이터는 "주" 기준으로 노출됨'],
  bad:'일/주/월 버튼이 안 맞아요',
@@ -306,15 +352,18 @@ const UI_TERMS=[
 
 {id:'chip',ko:'칩 / 태그',en:'Chip / Tag',cat:'입력·컨트롤',
  short:'필터나 키워드를 나타내는 작은 알약 모양 버튼.',
+ alias:'필터 태그',
+ still:1.4,
  desc:'필터, 선택한 키워드, 카테고리를 나타내는 작은 둥근 요소입니다. 눌러서 켜고 끄는 필터 칩, ✕로 지우는 입력 칩 등이 있습니다. 표시 전용 라벨은 배지나 태그라고 부르기도 합니다.',
  bugs:['칩의 ✕를 눌러도 필터가 해제되지 않음','칩이 많을 때 줄바꿈되지 않고 화면 밖으로 넘침','선택한 필터 칩과 실제 결과가 다름'],
  bad:'필터 지워도 안 지워져요',
  good:'[검색 필터 칩] "무료배송" 칩의 ✕ 탭 시 칩은 사라지나 결과 목록은 무료배송 필터가 유지됨',
  rel:['badge','segmented'],
- demo:PAGE('검색',`<div class="in">운동화</div><div class="chips"><span class="chip a">할인중</span><span class="chip x">무료배송 ✕</span><span class="chip">250mm</span><span class="chip">블랙</span></div>${L(2)}<div class="blk"></div>${L(2)}`)},
+ demo:PAGE('검색',`<div class="in">운동화</div><div class="chips"><span class="chip a">할인중</span><span class="chip x">무료배송 ✕</span><span class="chip">250mm</span><span class="chip">블랙</span></div>${BODY(2,2)}`)},
 
 {id:'slider',ko:'슬라이더',en:'Slider / Range',cat:'입력·컨트롤',
  short:'손잡이를 끌어서 값을 고르는 막대.',
+ alias:'레인지 가격 범위 드래그 바',
  desc:'막대 위의 손잡이(썸, thumb)를 좌우로 끌어 값을 정하는 컨트롤입니다. 가격 범위처럼 손잡이가 두 개인 것은 레인지 슬라이더라고 합니다. 이미지 여러 장을 넘기는 캐러셀을 "슬라이더"라고 부르는 경우도 있어 헷갈리기 쉽습니다.',
  bugs:['최솟값 손잡이가 최댓값보다 오른쪽으로 넘어감','슬라이더 값과 옆에 표시된 숫자가 다름','끝까지 끌어도 최댓값에 도달하지 않음'],
  bad:'가격 막대가 이상해요',
@@ -324,24 +373,28 @@ const UI_TERMS=[
 
 {id:'text-field',ko:'텍스트 필드 / 입력창',en:'Text Field / Input',cat:'입력·컨트롤',
  short:'글자를 직접 입력하는 칸. 레이블·커서·지우기 버튼 등으로 구성.',
+ alias:'인풋 input 입력칸 텍스트박스 포커스 커서 글자수 지우기',
  desc:'이름, 이메일, 검색어처럼 글자를 직접 입력하는 칸입니다. 위의 이름표는 레이블, 깜빡이는 세로 막대는 커서(캐럿), 입력값을 한 번에 지우는 ✕는 지우기(clear) 버튼, "5/20" 같은 숫자는 글자 수 카운터라고 부릅니다. 입력창을 눌러 커서가 들어간 상태를 "포커스"라고 하며, 기본·포커스·입력 완료·에러·비활성 상태별로 모양이 달라집니다.',
  bugs:['입력창을 눌러도 포커스가 잡히지 않거나 키보드가 뜨지 않음','최대 글자 수를 넘겨도 입력되거나, 카운터 숫자가 실제 글자 수와 다름','붙여넣기(Ctrl+V)가 안 되거나, 앞뒤 공백·이모지가 그대로 저장됨','지우기(✕) 버튼을 눌러도 값이 지워지지 않음','숫자만 입력해야 하는 칸에 문자가 입력됨'],
  bad:'입력칸에 글씨가 너무 많이 써져요',
  good:'[닉네임 텍스트 필드] 최대 10자 제한인데 붙여넣기로 15자 입력 가능, 카운터는 "10/10"으로 표시됨',
  rel:['placeholder','validation','button-state'],
- demo:PAGE('프로필 수정',`<b>닉네임</b><div class="in tf"><span class="typed tf-t">테스터김</span><span class="tf-x">✕</span></div><div class="tf-cnt"><span class="tf-n"><span><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i></span></span>/10</div><b>소개</b><div class="in"><span style="color:#8b95a7">한 줄 소개</span></div><div class="btn">저장</div>`)},
+ demo:PAGE('프로필 수정',`<b>닉네임</b><div class="in tf"><span class="typed tf-t">테스터김</span><span class="tf-x">✕</span></div><div class="tf-cnt"><span class="tf-n"><span><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i></span></span>/10</div><b>소개</b><div class="in"><span style="color:var(--phone-sub)">한 줄 소개</span></div><div class="btn">저장</div>`)},
 
 {id:'placeholder',ko:'플레이스홀더',en:'Placeholder',cat:'입력·컨트롤',
  short:'입력창이 비어 있을 때 보이는 회색 안내 글자.',
+ alias:'힌트 입력창',
  desc:'입력창이 비어 있을 때 흐리게 보이는 예시·안내 문구입니다. 글자를 입력하면 사라집니다. 입력창 위에 따로 붙는 이름표는 레이블(label)이라고 구분합니다.',
  bugs:['입력을 시작해도 플레이스홀더가 사라지지 않고 겹침','플레이스홀더 색이 입력값과 비슷해 이미 입력된 것처럼 보임','플레이스홀더만 있고 레이블이 없어 입력 후 무슨 칸인지 알 수 없음'],
  bad:'입력칸에 회색 글씨가 겹쳐요',
  good:'[로그인 이메일 입력창] 자동완성으로 값이 채워지면 플레이스홀더 "이메일 입력"이 입력값과 겹쳐 노출됨',
  rel:['validation'],
- demo:PAGE('로그인',`<b>이메일</b><div class="in"><span class="ph-t">example@mail.com</span><span class="typed">qa@test.kr</span></div><b>비밀번호</b><div class="in"><span style="color:#8b95a7">8자 이상</span></div><div class="btn">로그인</div>`)},
+ demo:PAGE('로그인',`<b>이메일</b><div class="in"><span class="ph-t">example@mail.com</span><span class="typed">qa@test.kr</span></div><b>비밀번호</b><div class="in"><span style="color:var(--phone-sub)">8자 이상</span></div><div class="btn">로그인</div>`)},
 
 {id:'validation',ko:'유효성 검사 메시지',en:'Inline Validation / Error Message',cat:'입력·컨트롤',
  short:'입력값이 틀렸을 때 입력창 아래 뜨는 빨간 안내.',
+ alias:'에러 오류 경고 인풋',
+ still:2.6,
  desc:'입력값이 규칙에 맞지 않을 때 입력창 테두리를 빨갛게 바꾸고 아래에 이유를 알려주는 메시지입니다. 입력 중 실시간으로 보여주는 방식과 제출할 때 한 번에 보여주는 방식이 있습니다. 헬퍼 텍스트(helper text)는 평소 안내 문구를 말합니다.',
  bugs:['올바른 값을 입력해도 에러 메시지가 남아 있음','에러 메시지 없이 버튼만 비활성화되어 이유를 알 수 없음','에러 문구가 실제 규칙과 다름'],
  bad:'비번 맞게 썼는데 빨간 글씨 떠요',
@@ -351,6 +404,7 @@ const UI_TERMS=[
 
 {id:'button-state',ko:'버튼 상태',en:'Default · Hover · Pressed · Focus · Disabled',cat:'입력·컨트롤',
  short:'기본·호버·눌림·포커스·비활성 상태별 버튼 모습.',
+ alias:'호버 포커스 비활성 disabled hover focus pressed',
  desc:'버튼은 상태마다 모습이 달라야 합니다. 기본(Default), 마우스를 올린 호버(Hover), 누르고 있는 눌림(Pressed/Active), 키보드로 선택된 포커스(Focus), 누를 수 없는 비활성(Disabled)이 대표적입니다. 어떤 상태에서 문제인지 이름으로 적으면 디자이너가 바로 디자인 시안과 비교할 수 있습니다.',
  bugs:['비활성(Disabled) 상태인데 눌리고 동작함','눌림 상태 피드백이 없어 눌렸는지 알 수 없음','Tab 키로 이동할 때 포커스 링이 보이지 않음','호버 색상이 시안과 다름'],
  bad:'버튼 색이 이상해요',
@@ -366,15 +420,17 @@ const UI_TERMS=[
 /* ---------- 콘텐츠·레이아웃 ---------- */
 {id:'accordion',ko:'아코디언',en:'Accordion / Collapse',cat:'콘텐츠·레이아웃',
  short:'제목을 누르면 내용이 펼쳐지고 접히는 목록.',
+ alias:'접기 펼치기 FAQ 토글',
  desc:'제목 줄을 누르면 아래 내용이 펼쳐지고, 다시 누르면 접히는 구조입니다. FAQ에서 많이 씁니다. 하나를 펼치면 다른 것이 자동으로 접히는지 여부도 스펙으로 정해두는 경우가 많습니다.',
  bugs:['펼침 화살표 방향이 상태와 반대','펼친 내용이 잘려서 끝까지 보이지 않음','하나만 열려야 하는데 여러 개가 동시에 열림'],
  bad:'FAQ 누르면 내용이 잘려요',
  good:'[FAQ 아코디언] 3번 항목을 펼치면 답변 마지막 두 줄이 잘려 보임(높이 계산 오류 추정)',
  rel:['tab','dropdown'],
- demo:PAGE('FAQ',`<div class="ac"><div class="h">배송은 얼마나 걸리나요? <i>▾</i></div><div class="c">${L(3)}</div></div><div class="ac"><div class="h">환불 규정 <i style="animation:none">▾</i></div></div><div class="ac"><div class="h">회원 탈퇴 <i style="animation:none">▾</i></div></div>`)},
+ demo:PAGE('FAQ',`<div class="ac"><div class="h">배송은 얼마나 걸리나요? <i>▾</i></div><div class="c">${L(3)}</div></div><div class="ac"><div class="h">환불 규정 <i class="na">▾</i></div></div><div class="ac"><div class="h">회원 탈퇴 <i class="na">▾</i></div></div>`)},
 
 {id:'carousel',ko:'캐러셀',en:'Carousel',cat:'콘텐츠·레이아웃',
  short:'이미지·카드를 좌우로 넘기는 영역.',
+ alias:'배너 롤링 스와이퍼 슬라이드',
  desc:'여러 장의 배너나 카드를 좌우로 넘겨 보는 영역입니다. 아래 점(dot indicator)이나 "1/5" 같은 숫자로 현재 위치를 보여줍니다. 실무에서는 슬라이더, 배너 롤링, 스와이퍼라고도 부릅니다.',
  bugs:['마지막 장에서 첫 장으로 넘어갈 때 화면이 깜빡임','점 인디케이터와 현재 장이 맞지 않음','자동 넘김이 사용자가 만지는 중에도 계속됨'],
  bad:'배너 넘기면 점이 안 맞아요',
@@ -384,15 +440,18 @@ const UI_TERMS=[
 
 {id:'card',ko:'카드',en:'Card',cat:'콘텐츠·레이아웃',
  short:'썸네일·제목·정보를 한 덩어리 상자로 묶은 요소.',
+ alias:'카드형 상품 리스트 그리드 썸네일',
  desc:'이미지, 제목, 가격, 버튼 같은 정보를 하나의 둥근 상자에 묶어 보여주는 요소입니다. 상품 목록, 피드, 대시보드에서 반복해서 씁니다. 카드 전체가 눌리는지, 카드 안의 버튼(찜·더보기)만 따로 눌리는지가 자주 테스트 포인트가 됩니다. 카드가 줄지어 있는 목록은 카드 리스트, 바둑판처럼 놓인 것은 카드 그리드라고 부릅니다.',
  bugs:['카드 안 찜(♡) 버튼을 눌렀는데 카드 전체가 눌려 상세로 이동함','카드마다 높이가 달라 그리드 줄이 어긋남','이미지가 없는 상품에서 카드 레이아웃이 무너짐','카드 눌림 피드백(배경색·그림자 변화)이 없음'],
  bad:'상품 네모 칸이 이상해요',
  good:'[상품 목록 카드] 카드 우측 상단 찜(♡) 아이콘 탭 시 찜 등록 대신 상품 상세 페이지로 이동함',
  rel:['truncation','badge','carousel'],
- demo:PAGE('상품 목록',`<div class="cdx"><div class="th"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>12,900원</b></div><span class="hrt">♡</span></div><div class="cdx" style="animation:none"><div class="th" style="background:#d06a4f"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>8,500원</b></div><span class="hrt">♡</span></div><div class="cdx" style="animation:none"><div class="th" style="background:#3f9a73"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>21,000원</b></div><span class="hrt">♡</span></div>`)},
+ demo:PAGE('상품 목록',`<div class="cdx"><div class="th"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>12,900원</b></div><span class="hrt">♡</span></div><div class="cdx na"><div class="th" style="background:#d06a4f"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>8,500원</b></div><span class="hrt">♡</span></div><div class="cdx na"><div class="th" style="background:#3f9a73"></div><div class="tx"><div class="ln m"></div><div class="ln s"></div><b>21,000원</b></div><span class="hrt">♡</span></div>`)},
 
 {id:'truncation',ko:'말줄임',en:'Truncation / Ellipsis',cat:'콘텐츠·레이아웃',
  short:'글이 길 때 뒤를 "…"로 자르는 처리.',
+ alias:'말줄임표 ... 오버플로우 잘림',
+ still:2.6,
  desc:'공간보다 텍스트가 길 때 넘치는 부분을 잘라내고 끝에 "…"을 붙이는 처리입니다. 한 줄 말줄임, 두 줄 이상 말줄임(라인 클램프)이 있습니다. 반대로 처리가 없어 글자가 박스 밖으로 튀어나가는 것은 텍스트 오버플로우라고 합니다.',
  bugs:['말줄임 없이 텍스트가 박스 밖으로 넘침','두 줄까지 보여야 하는데 한 줄에서 잘림','말줄임된 전체 내용을 확인할 방법이 없음'],
  bad:'제목이 삐져나와요',
@@ -402,25 +461,28 @@ const UI_TERMS=[
 
 {id:'pull-to-refresh',ko:'당겨서 새로고침',en:'Pull to Refresh',cat:'콘텐츠·레이아웃',
  short:'목록 맨 위에서 아래로 끌어 새로고침하는 동작.',
+ alias:'새로고침 PTR 끌어내리기',
  desc:'목록 맨 위에서 화면을 아래로 끌었다 놓으면 새 데이터를 불러오는 모바일 제스처입니다. 끄는 동안 상단에 로딩 아이콘이 나타납니다.',
  bugs:['당겼다 놓아도 새로고침되지 않음','목록 중간에서도 당김 동작이 걸림','새로고침 후 로딩 아이콘이 사라지지 않음'],
  bad:'당겨도 새로 안 떠요',
  good:'[알림 목록] Pull to Refresh 후 스피너만 노출되고 목록이 갱신되지 않음(새 알림 미반영)',
  rel:['infinite-scroll','spinner'],
- demo:HD('알림')+`<div class="spin ptr-spin"></div><div class="ptr">${L(2)}<div class="blk"></div>${L(3)}<div class="blk"></div>${L(2)}</div>`},
+ demo:HD('알림')+`<div class="spin ptr-spin"></div><div class="ptr">${BODY(2,3)}<div class="blk"></div>${L(2)}</div>`},
 
 {id:'swipe-action',ko:'스와이프 액션',en:'Swipe Action',cat:'콘텐츠·레이아웃',
  short:'목록 항목을 옆으로 밀면 삭제 등 버튼이 나오는 동작.',
+ alias:'밀어서 삭제 옆으로 밀기',
  desc:'목록의 한 줄을 좌우로 밀면 뒤에 숨어 있던 삭제, 보관 같은 버튼이 드러나는 동작입니다. 끝까지 밀면 바로 실행되는 풀 스와이프를 지원하기도 합니다.',
  bugs:['한 항목을 밀어둔 채 다른 항목을 밀면 앞 항목이 닫히지 않음','세로 스크롤 중 살짝 기울어도 스와이프가 걸림','풀 스와이프 시 확인 없이 바로 삭제됨'],
  bad:'옆으로 밀면 이상해요',
  good:'[메일 목록 스와이프 액션] 1번 항목을 왼쪽으로 스와이프한 상태에서 2번 항목을 스와이프하면 1번의 삭제 버튼이 열린 채 유지됨',
  rel:['snackbar'],
- demo:PAGE('메일',`<div class="sw"><span class="del">삭제</span><div class="row"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row" style="animation:none"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row" style="animation:none"><div class="ln m"></div><div class="ln s"></div></div></div>`)},
+ demo:PAGE('메일',`<div class="sw"><span class="del">삭제</span><div class="row"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row na"><div class="ln m"></div><div class="ln s"></div></div></div><div class="sw" style="background:transparent"><div class="row na"><div class="ln m"></div><div class="ln s"></div></div></div>`)},
 
 /* ---------- 환경·플랫폼 ---------- */
 {id:'dark-mode',ko:'다크 모드',en:'Dark Mode / Dark Theme',cat:'환경·플랫폼',
  short:'배경을 어둡게, 글자를 밝게 바꾼 화면 테마.',
+ alias:'다크테마 야간모드 테마 라이트모드',
  desc:'배경은 어둡게, 글자와 아이콘은 밝게 뒤집어 보여주는 화면 테마입니다. 기기 설정을 따라가는 "시스템 설정 따름"과 앱 안에서 직접 고르는 방식이 있습니다. 색을 하드코딩한 요소만 테마가 안 바뀌어 검은 배경에 검은 글씨가 되는 경우가 대표적인 버그라, 라이트·다크 두 모드에서 모두 확인해야 합니다.',
  bugs:['다크 모드에서 특정 텍스트·아이콘이 배경과 같은 색이라 보이지 않음','투명 배경이 아닌 흰 배경 이미지(로고 등)가 어두운 화면에서 흰 상자로 튐','기기 설정을 바꿔도 앱 테마가 즉시 바뀌지 않음','웹뷰 화면만 라이트 모드로 남음'],
  bad:'까만 화면에서 글씨가 안 보여요',
@@ -430,6 +492,7 @@ const UI_TERMS=[
 
 {id:'foreground-background',ko:'포그라운드 / 백그라운드',en:'Foreground / Background (App Lifecycle)',cat:'환경·플랫폼',
  short:'앱이 화면에 떠 있는 상태와 뒤로 숨어 있는 상태.',
+ alias:'포그라운드 백그라운드 앱전환 홈버튼 복귀 resume 라이프사이클',
  desc:'앱이 화면에 보이며 사용 중인 상태를 포그라운드, 홈 버튼을 누르거나 다른 앱으로 전환해 뒤에서 대기하는 상태를 백그라운드라고 합니다. 백그라운드에서 다시 앱으로 돌아오는 것을 "포그라운드 복귀(resume)"라고 하며, 이때 화면이 초기화되거나 데이터가 갱신되지 않는 버그가 자주 나옵니다. 오래 백그라운드에 있으면 OS가 앱을 종료할 수 있어 "백그라운드 장시간 방치 후 복귀"도 별도 케이스로 봅니다.',
  bugs:['백그라운드 갔다 오면 작성 중이던 내용이 사라짐','복귀 후 로그인 세션이 만료되었는데 안내 없이 빈 화면만 보임','백그라운드에서 영상·음악이 멈추지 않거나, 멈춰야 하는데 계속 재생됨','결제·인증 앱 전환 후 돌아오면 이전 화면이 아닌 홈으로 이동함'],
  bad:'앱 나갔다 들어오면 다 날아가요',
@@ -439,6 +502,7 @@ const UI_TERMS=[
 
 {id:'responsive',ko:'반응형 / 브레이크포인트',en:'Responsive Layout / Breakpoint',cat:'환경·플랫폼',
  short:'화면 폭에 맞춰 레이아웃이 바뀌는 것, 그 기준 폭.',
+ alias:'반응형 브레이크포인트 해상도 화면크기 태블릿 가로모드 미디어쿼리',
  desc:'반응형은 화면(창) 폭에 따라 레이아웃이 자동으로 바뀌는 설계입니다. 레이아웃이 바뀌는 기준 폭을 브레이크포인트라고 합니다(예: 768px 미만은 모바일 1열, 이상은 PC 3열). 브레이크포인트 바로 앞뒤 폭, 태블릿, 가로 모드, 브라우저 창 줄이기가 주요 테스트 구간이라 이슈를 쓸 때 화면 폭(px)이나 기기명을 함께 적어야 재현됩니다.',
  bugs:['특정 폭 구간(예: 768~1024px)에서 요소가 겹치거나 가로 스크롤이 생김','모바일 폭에서 PC용 메뉴가 그대로 나와 넘침','기기를 가로로 돌리면 레이아웃이 깨지거나 갱신되지 않음','이미지가 폭에 맞춰 줄지 않고 화면 밖으로 넘침'],
  bad:'화면 줄이면 깨져요',
@@ -447,11 +511,12 @@ const UI_TERMS=[
  demo:HD('창 폭 변화')+`<div class="pg"><div class="rsp"><div class="rsp-bar"><i></i><i></i><i></i></div><div class="rsp-grid"><div></div><div></div><div></div><div></div><div></div><div></div></div></div><div class="rsp-w"><span>PC 3열</span><span>모바일 1~2열</span></div></div>`},
 {id:'webview',ko:'웹뷰',en:'WebView',cat:'환경·플랫폼',
  short:'앱 안에서 웹 페이지를 띄워 보여주는 화면.',
+ alias:'웹뷰 웹페이지 인앱브라우저 하이브리드 이벤트페이지 web view',
  desc:'앱 안에 웹 브라우저를 넣어 웹 페이지를 보여주는 방식입니다. 이벤트, 공지, 약관, 결제처럼 자주 바뀌는 화면을 웹으로 만들어 앱에서 띄웁니다. 겉보기엔 앱 화면과 비슷하지만, 앱으로 직접 만든 네이티브 화면과 동작 방식이 달라 뒤로가기, 파일 첨부, 로그인 유지, 키보드 동작에서 차이가 납니다. 이슈에 웹뷰 화면이라고 적어주면 앱 개발자와 웹 개발자 중 누가 볼지 바로 정해집니다.',
  bugs:['웹뷰에서 기기 뒤로가기를 누르면 이전 웹 페이지가 아니라 웹뷰 전체가 닫힘','웹뷰에서만 로그인이 풀려 다시 로그인을 요구함','웹뷰 안의 파일 첨부 버튼을 눌러도 반응이 없음','웹뷰 하단 버튼이 키보드나 하단 탭 바에 가려짐'],
  bad:'이벤트 페이지가 이상해요',
  good:'[이벤트 웹뷰] 이벤트 상세(웹뷰)에서 다음 페이지로 이동 후 Android 뒤로가기 시 웹뷰 전체가 닫히고 홈으로 이동. 기대 결과: 이벤트 상세 첫 페이지로 이동',
  rel:['deep-link','header-footer','foreground-background'],
- demo:PAGE('홈',`<div class="wv-bn">11월 이벤트 보러 가기 ›</div>${L(3)}<div class="blk"></div>${L(2)}`)+`<div class="tap" style="left:90px;top:57px"></div><div class="wv">${HD('<span>✕</span> 이벤트')}<div class="wv-pb"></div><div class="wv-web"><div class="wv-hero">11월 혜택 모음</div>${L(3)}<div class="wv-cta">쿠폰 받기</div><div class="wv-url">event.example.com</div></div><span class="lbl wv-l" style="right:8px;top:8px">네이티브</span><span class="lbl wv-l" style="right:14px;top:44px">WebView</span></div>`},
+ demo:PAGE('홈',`<div class="wv-bn">11월 이벤트 보러 가기 ›</div>${BODY(3,2)}`)+`<div class="tap" style="left:90px;top:57px"></div><div class="wv">${HD('<span>✕</span> 이벤트')}<div class="wv-pb"></div><div class="wv-web"><div class="wv-hero">11월 혜택 모음</div>${L(3)}<div class="wv-cta">쿠폰 받기</div><div class="wv-url">event.example.com</div></div><span class="lbl wv-l" style="right:8px;top:8px">네이티브</span><span class="lbl wv-l" style="right:14px;top:44px">WebView</span></div>`},
 ];
 const UI_CATS=['전체','오버레이','내비게이션','입력·컨트롤','피드백·상태','콘텐츠·레이아웃','환경·플랫폼'];

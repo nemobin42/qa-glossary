@@ -2,25 +2,22 @@
 :root{
   --bg:#eef1f5; --surface:#ffffff; --ink:#18212f; --muted:#5b6678; --line:#d3d9e2;
   --accent:#2f5bea; --accent-soft:#e3e9fd; --mark:#ffe14d; --bad:#d6453d; --good:#1f8a5b; --warn:#b45309; --on-accent:#fff;
-  --stage:#dfe4ec; --phone:#ffffff; --phone-ink:#2a3445; --phone-line:#c9d0db;
+  --stage:#dfe4ec; --phone:#ffffff; --phone-ink:#2a3445; --phone-line:#c9d0db; --phone-sub:#8b95a7;
   --f-display:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121721; --surface:#1b2230; --ink:#e7ecf3; --muted:#9aa5b8; --line:#2c3546;
-  --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --warn:#f0a35e; --on-accent:#0d1424;
-  --stage:#0d121a; --phone:#222b3a; --phone-ink:#d7deea; --phone-line:#3a4559; color-scheme:dark}}
+/* 테마: 기본은 라이트(위 :root), 테마 버튼으로 다크를 고르면 data-theme="dark"로 아래 값을 씀 */
+:root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{
   --bg:#121721; --surface:#1b2230; --ink:#e7ecf3; --muted:#9aa5b8; --line:#2c3546;
   --accent:#7d9bff; --accent-soft:#232d48; --mark:#e8c93a; --bad:#ff7b72; --good:#4fc98e; --warn:#f0a35e; --on-accent:#0d1424;
-  --stage:#0d121a; --phone:#222b3a; --phone-ink:#d7deea; --phone-line:#3a4559; color-scheme:dark}
+  --stage:#2a3448; --phone:#1a212d; --phone-ink:#d7deea; --phone-line:#3a4559; color-scheme:dark}
 *{box-sizing:border-box}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 64px}
 /* GNB(.site-nav — 데모용 .gnb와 겹치지 않게 다른 이름): 사전 종류 전환 (UI/UX 용어 · HTTP 상태 코드) */
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:32px}
@@ -29,7 +26,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 .gnb-tabs a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:7px}
 .gnb-tabs a:hover{color:var(--ink)}
 .gnb-tabs a[aria-current="page"]{background:var(--ink);color:var(--bg)}
-.site-nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nav-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* 테마 버튼: 자동 → 라이트 → 다크 */
+.theme-btn{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer}
+.theme-btn:hover{border-color:var(--accent)}
 header.hero{display:grid;gap:14px;margin-bottom:28px}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
 h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5.2vw,48px);line-height:1.25;letter-spacing:-.02em;margin:0;text-wrap:balance}
@@ -44,7 +44,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cats{display:flex;gap:6px;flex-wrap:wrap}
 .cats button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
 .cats button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.cats button:focus-visible,.card:focus-visible,.close:focus-visible,.rel:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cats .n{font-family:var(--f-mono);font-size:11px;margin-left:6px;opacity:.65}
+.cats .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:1px}
+.site-nav a:focus-visible,.theme-btn:focus-visible,.cats button:focus-visible,.card:focus-visible,.close:focus-visible,.rel:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .count{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .card{text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0;cursor:pointer;display:grid;grid-template-rows:auto 1fr;overflow:hidden;transition:transform .15s,border-color .15s,box-shadow .15s}
@@ -52,6 +54,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .card .mini{height:150px;background:var(--stage);position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
 .card .body{padding:12px 14px 14px;display:grid;gap:4px;align-content:start;min-width:0}
 .card .cat{font-family:var(--f-mono);font-size:11px;color:var(--accent);letter-spacing:.04em}
+.card .cat:is(.s2,.s3,.s4,.s5){color:var(--c)}
+/* 화면 밖 카드는 썸네일 애니메이션 멈춤 (app.js가 .off를 붙임) */
+.card.off .mini *{animation-play-state:paused!important}
 .card h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1.3;letter-spacing:-.01em}
 .card .en{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .card p{margin:4px 0 0;font-size:13.5px;color:var(--muted);line-height:1.5}

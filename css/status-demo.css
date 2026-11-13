@@ -2,7 +2,7 @@
 .s2{--c:var(--good)} .s3{--c:var(--accent)} .s4{--c:var(--warn)} .s5{--c:var(--bad)}
 
 /* 카드 썸네일 */
-.sc-mini{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 9%,var(--stage))}
+.sc-mini{position:absolute;inset:0;display:grid;grid-auto-flow:column;gap:12px;place-items:center;place-content:center;background:color-mix(in srgb,var(--c) 9%,var(--stage))}
 .sc-mini b{font-family:var(--f-mono);font-size:56px;font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--c)}
 
 /* 개발자 도구 Network 탭 */
@@ -20,7 +20,6 @@
 .net-res code{font:inherit;white-space:pre-wrap;word-break:break-all}
 
 /* 이스터 에그 418: 찻주전자 그림 + 피어오르는 김 */
-.sc-mini{grid-auto-flow:column;gap:12px;place-content:center}
 .pot{position:relative;display:block;width:64px;height:44px;color:var(--c)}
 .pot svg{display:block;width:100%;height:100%}
 .pot i{position:absolute;bottom:100%;left:24px;width:5px;height:12px;border-radius:50%;background:var(--muted);opacity:0;animation:steam 2.4s infinite ease-out}
