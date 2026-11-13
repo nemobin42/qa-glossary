@@ -8,6 +8,10 @@ const CUR=`<div class="cur"><svg width="14" height="20" viewBox="0 0 14 20" aria
 // 커서 등은 버튼 바깥(래퍼)에 둠 — Disabled 투명도·Hover 밝기가 커서에 번지지 않게
 const BTN_ST=(c,n,k,x='')=>PAGE('결제',`${L(3)}<div class="blk"></div>${L(2)}<div class="bst-w ${c}"><div class="btn bst">결제하기</div>${x}</div><div class="bst-cap"><b>${n}</b><span>${k}</span></div>`);
 const HF_HD=HD('<span>←</span> 주문 상세<span style="margin-left:auto">⋮</span>');
+// 메뉴 아이콘: 점 아이콘(kb 세로 3개, mb 가로 3개, bt 3×3), 햄버거(≡), 장면 아래 설명 줄
+const MI=(k,n)=>`<span class="mi mi-${k}">${'<i></i>'.repeat(n)}</span>`;
+const MI_HB='<div class="hb hb-static"><i></i><i></i><i></i></div>';
+const MI_CAP=(i,n,k)=>`<div class="mi-cap"><span class="mi-ic">${i}</span><b>${n}</b><span>${k}</span></div>`;
 
 const UI_TERMS=[
 /* ---------- 오버레이 ---------- */
@@ -129,6 +133,15 @@ const UI_TERMS=[
  rel:['chip','bottom-nav'],
  demo:HD('홈')+`<div class="pg">${L(3)}<div class="blk"></div>${L(2)}<div style="display:flex;gap:24px;justify-content:center;margin-top:16px"><div class="bd-wrap"><span class="bd">3</span></div><div class="bd-wrap"><span class="bd">99+</span></div><div class="bd-wrap"><span class="bd dot"></span></div></div></div>`},
 
+{id:'push',ko:'푸시 알림',en:'Push Notification',cat:'피드백·상태',
+ short:'앱을 쓰고 있지 않아도 휴대폰 화면 위로 오는 알림.',
+ desc:'앱이 꺼져 있거나 백그라운드에 있어도 서버가 보내 휴대폰 잠금 화면과 알림 센터에 표시되는 알림입니다. 앱 안에서만 잠깐 뜨는 토스트·스낵바와는 다릅니다. 알림을 눌렀을 때 관련 화면(예: 주문 상세)으로 바로 이동하는 동작이 핵심이라, 앱이 꺼진 상태 / 백그라운드 / 사용 중인 상태를 나눠서 확인합니다. 기기 설정에서 알림 권한을 껐을 때의 동작도 테스트 대상입니다.',
+ bugs:['알림을 눌러도 해당 화면이 아니라 앱 홈으로 이동함','앱이 완전히 꺼진 상태에서 알림을 누르면 빈 화면이 뜸','같은 알림이 두 번 옴','알림 권한을 껐는데도 알림이 옴'],
+ bad:'알림 눌렀는데 이상한 데로 가요',
+ good:'[배송 시작 푸시] 앱 종료 상태에서 푸시 알림 탭 시 앱 홈 화면으로 진입함. 기대 결과: 해당 주문의 배송 조회 화면으로 이동',
+ rel:['toast','snackbar','deep-link','badge'],
+ demo:`<div class="fg-home"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="pu-bn"><span class="pu-ic"></span><div><b>예시몰</b>주문하신 상품이 배송을 시작했어요</div><em>지금</em></div><div class="tap" style="left:96px;top:34px"></div><div class="app-in">${PAGE('배송 조회',`<div class="pu-st"><b>배송 중</b><span>오늘 도착 예정</span></div>${L(3)}<div class="blk"></div>${L(2)}`)}</div><span class="lbl app-in-l" style="left:8px;bottom:8px">알림 탭 → 배송 조회 화면</span>`},
+
 /* ---------- 내비게이션 ---------- */
 {id:'gnb',ko:'GNB / LNB',en:'Global / Local Navigation Bar',cat:'내비게이션',
  short:'모든 페이지 공통 상단 메뉴(GNB)와 영역별 하위 메뉴(LNB).',
@@ -148,14 +161,19 @@ const UI_TERMS=[
  rel:['gnb','tab','fab'],
  demo:HD('<span class="nav-tt"><b>홈</b><b>검색</b><b>알림</b><b>MY</b></span>')+`<div class="pg nav-pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="nav-bt">${['홈','검색','알림','MY'].map(n=>`<span><i></i>${n}</span>`).join('')}</div>`},
 
-{id:'hamburger',ko:'햄버거 메뉴',en:'Hamburger Menu',cat:'내비게이션',
- short:'가로줄 세 개(≡) 모양의 메뉴 버튼.',
- desc:'가로줄 세 개로 된 아이콘으로, 누르면 드로어나 전체 메뉴가 열립니다. 열렸을 때 X 모양으로 바뀌는 경우가 많습니다. 아이콘 자체를 가리킬 때 쓰고, 열리는 패널은 드로어라고 구분해서 쓰면 정확합니다.',
- bugs:['메뉴를 닫았는데 아이콘이 X 상태로 남음','아이콘 터치 영역이 작아 잘 눌리지 않음'],
- bad:'메뉴 버튼 모양이 이상해요',
- good:'[GNB 햄버거 아이콘] 드로어를 딤 탭으로 닫으면 아이콘이 X에서 ≡로 돌아오지 않음',
- rel:['drawer','gnb'],
- demo:HD('<div class="hb"><i></i><i></i><i></i></div>')+`<div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="hb-dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`},
+{id:'hamburger',ko:'메뉴 아이콘',en:'Hamburger · Kebab · Meatball · Bento',cat:'내비게이션',
+ short:'≡ ⋮ ⋯ ⊞ 처럼 생긴 메뉴 버튼들. 모양마다 이름과 쓰임이 달라요.',
+ desc:'메뉴를 여는 아이콘은 모양에 따라 부르는 이름이 다릅니다. 가로줄 세 개(≡)는 햄버거, 세로 점 세 개(⋮)는 케밥(꼬치), 가로 점 세 개(⋯)는 미트볼, 점 아홉 개 격자는 벤토(도시락)라고 부릅니다. 햄버거는 앱 전체 메뉴(드로어)를, 케밥과 미트볼은 수정·삭제 같은 "더보기" 메뉴를, 벤토는 같은 회사의 다른 서비스나 앱 목록을 여는 데 주로 씁니다. 케밥은 화면 상단, 미트볼은 목록의 각 항목에 많이 쓰지만 팀마다 다르니, 이슈에는 아이콘 이름과 위치(예: "게시글 우측 상단 케밥 아이콘")를 함께 적으면 정확합니다. 줄 길이가 점점 짧아지는 아이콘은 도너라고 부르며 필터·정렬에 씁니다.',
+ bugs:['메뉴를 닫았는데 햄버거 아이콘이 X 상태로 남음','목록 항목의 미트볼 메뉴를 눌렀는데 다른 항목의 메뉴가 열림','케밥 메뉴가 화면 오른쪽 끝에서 잘려 보임','아이콘 터치 영역이 작아 잘 눌리지 않음'],
+ bad:'점 세 개 눌렀는데 이상해요',
+ good:'[게시글 상세 > 우측 상단 케밥(⋮) 메뉴] 메뉴가 열린 상태에서 화면 회전 시 메뉴가 화면 밖으로 밀려나 "삭제" 항목이 보이지 않음',
+ rel:['drawer','popover','gnb'],
+ demo:CAR([
+   HD('메뉴 아이콘 4종')+`<div class="pg"><div class="mi-ov">${[[MI_HB,'햄버거','전체 메뉴'],[MI('kb',3),'케밥 (꼬치)','화면 더보기'],[MI('mb',3),'미트볼','항목 더보기'],[MI('bt',9),'벤토 (도시락)','서비스 목록']].map(([i,n,k])=>`<div class="mi-t"><div class="mi-ic">${i}</div><b>${n}</b><span>${k}</span></div>`).join('')}</div></div>`,
+   HD(`${MI_HB} 홈`).replace('class="hb hb-static"','class="hb"')+`<div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><div class="hb-dr"><b>메뉴</b><div>홈</div><div>주문내역</div><div>쿠폰</div><div>설정</div></div>`+MI_CAP(MI_HB,'햄버거','전체 메뉴(드로어)를 열어요'),
+   HD(`게시글<span class="mi-press" style="margin-left:auto">${MI('kb',3)}</span>`)+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="pv"><div>수정</div><div>공유</div><div style="color:var(--bad)">삭제</div></div>`+MI_CAP(MI('kb',3),'케밥 (꼬치)','이 화면 전체의 더보기 메뉴'),
+   HD('알림함')+`<div class="pg" style="gap:0">${[0,1,2].map(n=>`<div class="mi-row"><div class="mi-row-t">${L(2)}</div><span${n==1?' class="mi-press"':''}>${MI('mb',3)}</span></div>`).join('')}</div><div class="pv" style="top:108px"><div>읽음 표시</div><div>알림 끄기</div><div style="color:var(--bad)">삭제</div></div>`+MI_CAP(MI('mb',3),'미트볼','이 항목만의 더보기 메뉴'),
+   HD(`홈<span class="mi-press" style="margin-left:auto">${MI('bt',9)}</span>`)+`<div class="pg">${L(3)}<div class="blk"></div>${L(3)}</div><div class="mi-apps">${['쇼핑','페이','지도','메일','캘린더','드라이브'].map(a=>`<div><i></i>${a}</div>`).join('')}</div>`+MI_CAP(MI('bt',9),'벤토 (도시락)','다른 서비스·앱 목록을 열어요')])},
 
 {id:'tab',ko:'탭',en:'Tabs',cat:'내비게이션',
  short:'같은 화면 안에서 내용을 바꿔 보여주는 버튼 줄.',
@@ -230,6 +248,15 @@ const UI_TERMS=[
  demo:CAR([
   `<div class="car-hl top">${HF_HD}</div><div class="pg">${L(3)}<div class="blk"></div>${L(4)}</div><span class="lbl" style="left:10px;top:38px">① 헤더 Header</span>`,
   `${HF_HD}<div class="pg">${L(3)}<div class="blk"></div>${L(2)}</div><span class="lbl" style="left:10px;bottom:84px">② 푸터 Footer</span><div class="hf-ft car-hl bot"><div>이용약관 · 개인정보처리방침</div><div>고객센터 1588-0000</div><div>© 예시컴퍼니</div></div>`])},
+
+{id:'deep-link',ko:'딥링크',en:'Deep Link',cat:'내비게이션',
+ short:'링크를 누르면 앱의 특정 화면으로 바로 열리는 것.',
+ desc:'링크를 눌렀을 때 앱의 첫 화면이 아니라 상품 상세, 이벤트 페이지 같은 특정 화면으로 바로 이동시키는 링크입니다. 문자, 메신저, SNS, 광고, 푸시 알림에서 많이 쓰입니다. 앱이 설치되어 있으면 앱으로, 없으면 앱 스토어나 웹 페이지로 보내는 경우가 많아 앱 설치 여부, 로그인 여부, 앱 실행 상태별로 나눠 확인합니다.',
+ bugs:['링크를 누르면 앱 홈으로만 열리고 해당 상품으로 이동하지 않음','로그인이 필요한 화면이면 로그인 후 원래 화면으로 돌아오지 않음','앱이 없을 때 스토어가 아니라 오류 페이지로 이동함','특정 메신저 안에서 누를 때만 동작하지 않음'],
+ bad:'링크 누르면 앱만 켜져요',
+ good:'[상품 공유 링크] 메신저에서 공유받은 상품 링크 탭 시 앱은 실행되나 홈 화면에 머무름(앱 실행 중 상태). 기대 결과: 해당 상품 상세 화면으로 이동',
+ rel:['push','webview'],
+ demo:HD('메신저')+`<div class="pg dl-chat"><div class="dl-b">${L(2)}</div><div class="dl-b me"><div class="dl-card"><div class="dl-th"></div><b>무선 이어폰 특가</b><span>shop.example/p/42</span></div></div><div class="dl-b">${L(1)}</div></div><div class="tap" style="left:118px;top:106px"></div><div class="app-in">${PAGE('상품 상세',`<div class="blk" style="height:80px"></div><b>무선 이어폰 특가</b>${L(2)}<div class="btn">구매하기</div>`)}</div><span class="lbl app-in-l" style="left:8px;bottom:8px">홈이 아니라 상품 화면으로 바로</span>`},
 
 /* ---------- 입력·컨트롤 ---------- */
 {id:'dropdown',ko:'드롭다운 / 셀렉트 박스',en:'Dropdown / Select',cat:'입력·컨트롤',
@@ -418,5 +445,13 @@ const UI_TERMS=[
  good:'[메인 > 기획전 영역] 브라우저 폭 800px(태블릿 구간)에서 카드 3열이 유지되어 카드가 겹치고 가로 스크롤 발생. 기대 결과: 768~1023px 2열',
  rel:['card','dark-mode','truncation'],
  demo:HD('창 폭 변화')+`<div class="pg"><div class="rsp"><div class="rsp-bar"><i></i><i></i><i></i></div><div class="rsp-grid"><div></div><div></div><div></div><div></div><div></div><div></div></div></div><div class="rsp-w"><span>PC 3열</span><span>모바일 1~2열</span></div></div>`},
+{id:'webview',ko:'웹뷰',en:'WebView',cat:'환경·플랫폼',
+ short:'앱 안에서 웹 페이지를 띄워 보여주는 화면.',
+ desc:'앱 안에 웹 브라우저를 넣어 웹 페이지를 보여주는 방식입니다. 이벤트, 공지, 약관, 결제처럼 자주 바뀌는 화면을 웹으로 만들어 앱에서 띄웁니다. 겉보기엔 앱 화면과 비슷하지만, 앱으로 직접 만든 네이티브 화면과 동작 방식이 달라 뒤로가기, 파일 첨부, 로그인 유지, 키보드 동작에서 차이가 납니다. 이슈에 웹뷰 화면이라고 적어주면 앱 개발자와 웹 개발자 중 누가 볼지 바로 정해집니다.',
+ bugs:['웹뷰에서 기기 뒤로가기를 누르면 이전 웹 페이지가 아니라 웹뷰 전체가 닫힘','웹뷰에서만 로그인이 풀려 다시 로그인을 요구함','웹뷰 안의 파일 첨부 버튼을 눌러도 반응이 없음','웹뷰 하단 버튼이 키보드나 하단 탭 바에 가려짐'],
+ bad:'이벤트 페이지가 이상해요',
+ good:'[이벤트 웹뷰] 이벤트 상세(웹뷰)에서 다음 페이지로 이동 후 Android 뒤로가기 시 웹뷰 전체가 닫히고 홈으로 이동. 기대 결과: 이벤트 상세 첫 페이지로 이동',
+ rel:['deep-link','header-footer','foreground-background'],
+ demo:PAGE('홈',`<div class="wv-bn">11월 이벤트 보러 가기 ›</div>${L(3)}<div class="blk"></div>${L(2)}`)+`<div class="tap" style="left:90px;top:57px"></div><div class="wv">${HD('<span>✕</span> 이벤트')}<div class="wv-pb"></div><div class="wv-web"><div class="wv-hero">11월 혜택 모음</div>${L(3)}<div class="wv-cta">쿠폰 받기</div><div class="wv-url">event.example.com</div></div><span class="lbl wv-l" style="right:8px;top:8px">네이티브</span><span class="lbl wv-l" style="right:14px;top:44px">WebView</span></div>`},
 ];
 const UI_CATS=['전체','오버레이','내비게이션','입력·컨트롤','피드백·상태','콘텐츠·레이아웃','환경·플랫폼'];
