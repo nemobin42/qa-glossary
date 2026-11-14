@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이슈 리포트 용어 사전</title>
+<!-- 검색·공유 미리보기 -->
+<meta name="description" content="QA·테스터가 이슈 리포트에 쓰는 UI/UX 용어(모달, 바텀 시트, 토스트 등)와 HTTP 상태 코드(404, 500 등)를 화면 예시와 함께 정리한 용어 사전.">
+<link rel="canonical" href="https://nemobin42.github.io/qa-glossary/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="이슈 리포트 용어 사전">
+<meta property="og:title" content="이슈 리포트 용어 사전">
+<meta property="og:description" content="QA·테스터가 이슈 리포트에 쓰는 UI/UX 용어(모달, 바텀 시트, 토스트 등)와 HTTP 상태 코드(404, 500 등)를 화면 예시와 함께 정리한 용어 사전.">
+<meta property="og:url" content="https://nemobin42.github.io/qa-glossary/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"이슈 리포트 용어 사전","url":"https://nemobin42.github.io/qa-glossary/","inLanguage":"ko","description":"QA·테스터가 이슈 리포트에 쓰는 UI/UX 용어(모달, 바텀 시트, 토스트 등)와 HTTP 상태 코드(404, 500 등)를 화면 예시와 함께 정리한 용어 사전."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/common.css">
@@ -21,11 +32,11 @@
       <button type="button" class="theme-btn" id="theme"></button>
     </div>
   </nav>
-  <!-- 문구는 사전별로 app.js의 DICTS에서 채움 -->
+  <!-- 문구는 사전별로 app.js의 DICTS에서 채움. 아래는 JS 실행 전·검색 로봇용 기본 문구(UI/UX 사전) -->
   <header class="hero">
-    <span class="eyebrow" id="eyebrow"></span>
-    <h1 id="h1"></h1>
-    <p class="lede" id="lede"></p>
+    <span class="eyebrow" id="eyebrow">For QA &amp; Testers · UI/UX 용어</span>
+    <h1 id="h1">“그 팝업”의<br><mark>정확한 이름</mark>은 뭘까요?</h1>
+    <p class="lede" id="lede">QA·테스터가 이슈 리포트를 쓸 때 필요한 용어를 모았어요. 모달, 바텀 시트, 토스트는 모두 “팝업”이라고 부르기 쉽지만, 개발자와 디자이너에게는 서로 다른 컴포넌트예요. 정확한 이름을 쓰면 어느 부분을 확인해야 하는지 바로 전달돼요. 카드를 누르면 용어 설명과 화면 예시를 볼 수 있어요.</p>
   </header>
 
   <div class="toolbar">
