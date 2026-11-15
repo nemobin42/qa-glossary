@@ -35,6 +35,9 @@ header.hero{display:grid;gap:14px;margin-bottom:28px}
 h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5.2vw,48px);line-height:1.25;letter-spacing:-.02em;margin:0;text-wrap:balance}
 h1 mark{background:linear-gradient(transparent 55%,var(--mark) 55%);color:inherit;padding:0 .1em}
 .lede{max-width:62ch;color:var(--muted);margin:0}
+/* 안내 문구 (개인이 정리한 비공식 자료라 참고용) */
+.notice{max-width:62ch;margin:0;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13.5px;line-height:1.55}
+.notice b{display:block;color:var(--warn);font-size:12.5px;margin-bottom:2px}
 .toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;display:grid;gap:10px;border-bottom:1px solid var(--line);margin-bottom:22px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 12px}
